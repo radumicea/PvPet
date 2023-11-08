@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using PvPet.API.Configurations;
 using PvPet.Data.Contexts;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using PvPet.Business.Middleware;
 
 const string myPolicy = "MyPolicy";
 
@@ -19,6 +21,10 @@ builder.Services.AddCors(static options =>
             .AllowAnyMethod();
     });
 });
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<DbContext, PvPetDbContext>(options =>
@@ -46,10 +52,16 @@ builder.Services
         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddTransient<ExceptionHandlerMiddleware>();
+
 var app = builder.Build();
+
+//app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

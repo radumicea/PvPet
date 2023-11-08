@@ -11,6 +11,8 @@ public static class ServicesSettingsExtension
         services.AddTransient<ICategoryService, CategoryService>();
         services.AddTransient<IBookCategoryService, BookCategoryService>();
 
+        services.AddTransient<IAccountService, AccountService>();
+
         return services;
     }
 }

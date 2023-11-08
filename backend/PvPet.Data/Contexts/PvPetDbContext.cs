@@ -13,6 +13,10 @@ public class PvPetDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<BookCategory> BookCategories { get; set; }
 
+    public DbSet<Account> Users { get; set; }
+
+    public DbSet<Pet> Pets { get; set; }
+
     public async Task InitAsync()
     {
         await Database.EnsureCreatedAsync();
@@ -20,9 +24,25 @@ public class PvPetDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BookCategory>()
-            .HasKey(bc => bc.Id);
+        AddConstraints(modelBuilder);
+        AddForeignKeys(modelBuilder);
+        SeedData(modelBuilder);
 
+    }
+
+    private void SeedData(ModelBuilder modelBuilder)
+    {
+        SeedUsers(modelBuilder);
+        
+    }
+
+    private void SeedUsers(ModelBuilder modelBuilder)
+    {
+        
+    }
+
+    private void AddForeignKeys(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<BookCategory>()
             .HasOne(bc => bc.Book)
             .WithMany(b => b.BookCategories)
@@ -32,5 +52,12 @@ public class PvPetDbContext : DbContext
             .HasOne(bc => bc.Category)
             .WithMany(c => c.BookCategories)
             .HasForeignKey(bc => bc.CategoryId);
+    }
+
+    private void AddConstraints(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Account>()
+            .HasIndex(account => account.Username)
+            .IsUnique();
     }
 }
