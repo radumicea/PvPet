@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.PvPet" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.PvPet" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
 </resources>

@@ -1,4 +1,4 @@
-package codebusters.pvpet
+package codebusters.pvpet.ui.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import codebusters.pvpet.ui.composables.Button
 import codebusters.pvpet.ui.theme.PvPetTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +37,16 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ButtonPreview() {
+    PvPetTheme {
+        Surface {
+            Button(text = "TEST", onClick = { }, width = 300.dp, height = 100.dp)
+        }
+    }
 }
 
 @Preview(showBackground = true)
