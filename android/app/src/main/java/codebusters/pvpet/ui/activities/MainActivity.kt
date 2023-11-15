@@ -1,5 +1,6 @@
 package codebusters.pvpet.ui.activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,9 +10,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import codebusters.pvpet.providers.LocationProvider
 import codebusters.pvpet.services.LocationService
@@ -19,6 +20,8 @@ import codebusters.pvpet.ui.composables.Button
 import codebusters.pvpet.ui.theme.PvPetTheme
 
 class MainActivity : ComponentActivity() {
+    private var shouldGoToMap = false
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions(),
     ) { permissions ->
@@ -26,6 +29,9 @@ class MainActivity : ComponentActivity() {
             if (permission.key == android.Manifest.permission.ACCESS_FINE_LOCATION) {
                 if (permission.value) {
                     initProviderAndStartService()
+                    if (shouldGoToMap) {
+                        goToMap()
+                    }
                     return@registerForActivityResult
                 }
             }
@@ -44,17 +50,25 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = Color.White
                 ) {
                     Button(
-                        text = "TEST",
-                        onClick = { askForPermission() },
+                        text = "Go to Map",
+                        onClick = { shouldGoToMap = true; askForPermission() },
                         width = 300.dp,
                         height = 100.dp
                     )
                 }
             }
         }
+
+        askForPermission()
+    }
+
+    private fun goToMap() {
+        startActivity(Intent(this, MapActivity::class.java))
+        finish()
+        setResult(Activity.RESULT_OK)
     }
 
     private fun askForPermission() {
@@ -62,6 +76,9 @@ class MainActivity : ComponentActivity() {
             checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         ) {
             initProviderAndStartService()
+            if (shouldGoToMap) {
+                goToMap()
+            }
         } else if (shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_COARSE_LOCATION) ||
             shouldShowRequestPermissionRationale(android.Manifest.permission.ACCESS_FINE_LOCATION)
         ) {

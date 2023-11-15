@@ -1,34 +1,40 @@
 package codebusters.pvpet.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import codebusters.pvpet.R
 
-// Set of Material typography styles to start with
+private val font = FontFamily(Font(R.font.robotomono))
+private val primaryColor = Color(0xFF232323)
+private val secondaryColor = Color(0xFF5A5A5A)
+
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+    titleMedium = TextStyle(
+        fontFamily = font,
+        fontSize = 24.sp,
+        lineHeight = 36.sp,
+        color = primaryColor
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = font,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
+        color = primaryColor
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    bodySmall = TextStyle(
+        fontFamily = font,
+        fontSize = 14.sp,
+        lineHeight = 21.sp,
+        color = primaryColor
+    ),
+    labelMedium = TextStyle(
+        fontFamily = font,
+        fontSize = 12.sp,
+        lineHeight = 18.sp,
+        color = secondaryColor
+    ),
 )
