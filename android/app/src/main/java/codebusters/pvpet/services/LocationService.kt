@@ -15,7 +15,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-
 class LocationService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
@@ -23,7 +22,7 @@ class LocationService : Service() {
         return null
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onCreate() {
         val notification = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
@@ -36,11 +35,13 @@ class LocationService : Service() {
 
         ServiceCompat.startForeground(
             this,
-            startId,
+            (System.currentTimeMillis() % 1_000_000_000).toInt(),
             notification,
             ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
         )
+    }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
     }
 }

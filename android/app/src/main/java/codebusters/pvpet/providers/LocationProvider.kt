@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 
+@SuppressWarnings("MissingPermission")
 object LocationProvider {
     private var _fusedLocationClient: FusedLocationProviderClient? = null
     private val fusedLocationClient: FusedLocationProviderClient
