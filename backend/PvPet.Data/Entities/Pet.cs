@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace PvPet.Data.Entities;
 
-namespace PvPet.Data.Entities
+public class Pet : Entity
 {
-    public class Pet : Entity
-    {
-        public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
-        public string Variant { get; set; }
+    public string Variant { get; set; } = default!;
 
-        public int Hp { get; set; }
+    public int Hp { get; set; }
 
-        public int Food { get; set; }
+    public int Food { get; set; }
 
-        public int Starvation { get; set; }
+    public int Starvation { get; set; }
 
-        public int Attack { get; set; }
+    public int Attack { get; set; }
 
-        public int Armor { get; set; }
+    public int Armor { get; set; }
 
-        public int AttackSpeed { get; set; }
+    public int AttackSpeed { get; set; }
 
-        public int Crit { get; set; }
-    }
+    public int Crit { get; set; }
+
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
+
+    public Guid AccountId { get; set; }
+
+    public Account Account { get; set; } = default!;
 }

@@ -66,7 +66,21 @@ public class BaseService<TEntity, TDto> : IBaseService<TEntity, TDto>
     public virtual async Task<bool> UpdateAsync(TDto model)
     {
         var entity = _mapper.Map<TEntity>(model);
-        _entitiesSet.Update(entity);
+        _context.Attach(entity);
+        var entry = _context.Entry(entity);
+
+        foreach (var prop in typeof(TDto).GetProperties())
+        {
+            var value = prop.GetValue(model, null);
+            if (value is not null)
+            {
+                if (entry.Properties.Any(p => p.Metadata.Name == prop.Name && !p.Metadata.IsKey()))
+                {
+                    entry.Property(prop.Name).IsModified = true;
+                }
+            }
+        }
+
         return await _context.SaveChangesAsync() >= 0;
     }
 
