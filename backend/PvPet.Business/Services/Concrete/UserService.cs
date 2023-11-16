@@ -11,13 +11,13 @@ using PvPet.Data.Entities;
 
 namespace PvPet.Business.Services.Concrete;
 
-public class AccountService : BaseService<Account,AccountDto> ,IAccountService
+public class UserService : BaseService<User, UserDto>, IUserService
 {
-    public AccountService(DbContext context, IMapper mapper) : base(context, mapper)
+    public UserService(DbContext context, IMapper mapper) : base(context, mapper)
     {
     }
 
-    public async Task<ClaimsPrincipal> GetClaimsAsync(AccountDto request)
+    public async Task<ClaimsPrincipal> GetClaimsAsync(UserDto request)
     {
         var user = await QuerySingleAsync(predicate: dto => dto.Username == request.Username);
         if (user == null)
@@ -28,12 +28,12 @@ public class AccountService : BaseService<Account,AccountDto> ,IAccountService
 
         var nameClaim = new Claim(ClaimTypes.Name, user.Username);
 
-        return new ClaimsPrincipal(new ClaimsIdentity(new []{nameClaim}, CookieAuthenticationDefaults.AuthenticationScheme));
+        return new ClaimsPrincipal(new ClaimsIdentity(new[] { nameClaim }, CookieAuthenticationDefaults.AuthenticationScheme));
     }
 
-    public async Task CreateAccountAsync(AccountDto account)
+    public override async Task<Guid> AddAsync(UserDto user)
     {
-        account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
-        await AddAsync(account);
+        user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        return await base.AddAsync(user);
     }
 }

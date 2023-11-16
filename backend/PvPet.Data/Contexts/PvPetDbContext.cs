@@ -13,7 +13,7 @@ public class PvPetDbContext : DbContext
     public DbSet<Category> Categories { get; set; }
     public DbSet<BookCategory> BookCategories { get; set; }
 
-    public DbSet<Account> Users { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public DbSet<Pet> Pets { get; set; }
 
@@ -53,9 +53,9 @@ public class PvPetDbContext : DbContext
             .WithMany(c => c.BookCategories)
             .HasForeignKey(bc => bc.CategoryId);
 
-        modelBuilder.Entity<Account>()
+        modelBuilder.Entity<User>()
             .HasOne(acc => acc.Pet)
-            .WithOne(pet => pet.Account);
+            .WithOne(pet => pet.User);
 
         modelBuilder.Entity<Pet>()
             .HasMany(pet => pet.Items)
@@ -66,8 +66,8 @@ public class PvPetDbContext : DbContext
 
     private void AddConstraints(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>()
-            .HasIndex(account => account.Username)
+        modelBuilder.Entity<User>()
+            .HasIndex(user => user.Username)
             .IsUnique();
     }
 }

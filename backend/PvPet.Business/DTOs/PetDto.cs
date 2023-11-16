@@ -4,7 +4,7 @@ public class PetDto
 {
     private static readonly string[] variants = { "Slime", "Golem" };
 
-    public PetDto(string name, Guid accountId)
+    public PetDto(string name, Guid userId)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -16,7 +16,7 @@ public class PetDto
         Armor = 5;
         AttackSpeed = 1.0;
         Crit = 0;
-        AccountId = accountId;
+        UserId = userId;
     }
 
     public PetDto()
@@ -47,9 +47,9 @@ public class PetDto
 
     public double? Longitude { get; set; }
 
-    public Guid? AccountId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public AccountDto? Account { get; set; }
+    public UserDto? User { get; set; }
 
     public ICollection<ItemDto>? Items { get; set; }
 }

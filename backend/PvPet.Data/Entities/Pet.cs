@@ -24,9 +24,9 @@ public class Pet : Entity
 
     public double Longitude { get; set; }
 
-    public Guid AccountId { get; set; }
+    public Guid UserId { get; set; }
 
-    public Account Account { get; set; } = default!;
+    public User User { get; set; } = default!;
 
     public ICollection<Item> Items { get; set; } = default!;
 }

@@ -1,8 +1,7 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Http;
-using PvPet.Business.Exceptions;
+﻿using PvPet.Business.Exceptions;
+using System.Net;
 
-namespace PvPet.Business.Middleware
+namespace PvPet.API.Middleware
 {
     public class ExceptionHandlerMiddleware : IMiddleware
     {

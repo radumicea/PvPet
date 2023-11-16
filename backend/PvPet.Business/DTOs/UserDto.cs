@@ -1,6 +1,6 @@
 ﻿namespace PvPet.Business.DTOs;
 
-public class AccountDto
+public class UserDto
 {
     public string Username { get; set; } = default!;
 

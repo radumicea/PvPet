@@ -2,7 +2,7 @@
 
 namespace PvPet.Business.Exceptions;
 
-internal class ResponseStatusException : Exception
+public class ResponseStatusException : Exception
 {
     public HttpStatusCode StatusCode { get; }
 

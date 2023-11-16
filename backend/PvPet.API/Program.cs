@@ -4,7 +4,7 @@ using PvPet.API.Configurations;
 using PvPet.Data.Contexts;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using PvPet.Business.Middleware;
+// using PvPet.API.Middleware;
 
 const string myPolicy = "MyPolicy";
 
@@ -57,11 +57,11 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddTransient<ExceptionHandlerMiddleware>();
+// builder.Services.AddTransient<ExceptionHandlerMiddleware>();
 
 var app = builder.Build();
 
-//app.UseMiddleware<ExceptionHandlerMiddleware>();
+// app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

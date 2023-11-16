@@ -19,7 +19,7 @@ public class PetController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] PetDto model)
     {
-        var pet = new PetDto(model.Name, HttpContext.GetAccountId());
+        var pet = new PetDto(model.Name, HttpContext.GetUserId());
         var id = await _service.AddAsync(pet);
 
         return id != Guid.Empty
@@ -30,7 +30,7 @@ public class PetController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var pet = await _service.QuerySingleAsync(predicate: p => p.AccountId == HttpContext.GetAccountId());
+        var pet = await _service.QuerySingleAsync(predicate: p => p.UserId == HttpContext.GetUserId());
         return Ok(pet);
     }
 }

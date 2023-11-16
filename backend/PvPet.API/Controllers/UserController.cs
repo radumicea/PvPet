@@ -7,26 +7,29 @@ namespace PvPet.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IAccountService _accountService;
+        private readonly IUserService _userService;
 
-        public AccountController(IAccountService accountService)
+        public UserController(IUserService userService)
         {
-            _accountService = accountService;
+            _userService = userService;
         }
 
-        [HttpPost("new")]
-        public async Task<IActionResult> CreateAccount([FromBody] AccountDto account)
+        [HttpPost]
+        public async Task<IActionResult> Add([FromBody] UserDto user)
         {
-            await _accountService.CreateAccountAsync(account);
-            return Ok();
+            var id = await _userService.AddAsync(user);
+
+            return id != Guid.Empty
+            ? Ok()
+            : BadRequest();
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AccountDto account)
+        public async Task<IActionResult> Login([FromBody] UserDto user)
         {
-            var claims = await _accountService.GetClaimsAsync(account);
+            var claims = await _userService.GetClaimsAsync(user);
             await HttpContext.SignInAsync(claims);
 
             return Ok();
