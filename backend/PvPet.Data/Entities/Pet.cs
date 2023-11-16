@@ -8,6 +8,7 @@ namespace PvPet.Data.Entities
 {
     public class Pet : Entity
     {
+        public Account Account { get; set; }
         public string Name { get; set; }
 
         public string Variant { get; set; }
@@ -22,8 +23,10 @@ namespace PvPet.Data.Entities
 
         public int Armor { get; set; }
 
-        public int AttackSpeed { get; set; }
+        public double AttackSpeed { get; set; }
 
         public int Crit { get; set; }
+
+        public ICollection<Item> Items { get; set; }
     }
 }

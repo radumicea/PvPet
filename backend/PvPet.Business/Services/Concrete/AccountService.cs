@@ -4,6 +4,7 @@ using System.Xml;
 using AutoMapper;
 using Crop360.Business.Services.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PvPet.Business.DTOs;
 using PvPet.Business.Exceptions;

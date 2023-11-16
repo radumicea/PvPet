@@ -41,12 +41,5 @@ namespace PvPet.API.Controllers
             await HttpContext.SignOutAsync();
             return Ok();
         }
-
-        [HttpGet("test")]
-        public string AccountName()
-        {
-            return HttpContext.User.Claims.First().Value;
-        }
-
     }
 }

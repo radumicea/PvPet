@@ -52,6 +52,16 @@ public class PvPetDbContext : DbContext
             .HasOne(bc => bc.Category)
             .WithMany(c => c.BookCategories)
             .HasForeignKey(bc => bc.CategoryId);
+
+        modelBuilder.Entity<Account>()
+            .HasOne(acc => acc.Pet)
+            .WithOne(pet => pet.Account);
+
+        modelBuilder.Entity<Pet>()
+            .HasMany(pet => pet.Items)
+            .WithOne()
+            .HasForeignKey(item => item.PetGuid)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     private void AddConstraints(ModelBuilder modelBuilder)
