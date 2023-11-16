@@ -8,6 +8,8 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import codebusters.pvpet.constants.Constants
+import codebusters.pvpet.data_access.GameDataAccessor
+import codebusters.pvpet.models.Pet
 import codebusters.pvpet.providers.LocationProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +31,19 @@ class LocationService : Service() {
 
         LocationProvider.getLocationUpdates(Constants.TICK_IN_MS)
             .onEach { location ->
-                Log.i("i", "lat: ${location.latitude}; long: ${location.longitude}")
+                val enemyLocations = GameDataAccessor.updatePetLocation(
+                    Pet(
+                        id = "1F6DBB97-B39A-46AA-A66D-15B5894675DD",
+                        latitude = location.latitude,
+                        longitude = location.longitude
+                    )
+                )
+
+                if (enemyLocations != null) {
+                    Log.i("i", enemyLocations.toString())
+                } else {
+                    Log.e("e", "Error requesting")
+                }
             }
             .launchIn(serviceScope)
 
