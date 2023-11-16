@@ -1,7 +1,6 @@
 package codebusters.pvpet.providers
 
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -18,7 +17,7 @@ object HttpClient {
         .writeTimeout(2, TimeUnit.SECONDS)
         .build()
 
-    fun <TResponse> post(url: String, payload: Any): TResponse? {
+    fun post(url: String, payload: Any): String? {
         val json = Gson().toJson(payload)
 
         val body = json.toRequestBody(JsonMediaType)
@@ -26,14 +25,13 @@ object HttpClient {
 
         return try {
             val response = client.newCall(request).execute()
-            val responseJson = response.body?.string()
-            Gson().fromJson(responseJson, object : TypeToken<TResponse>() {}.type)
+            return response.body?.string()
         } catch (e: Exception) {
             null
         }
     }
 
-    fun <TResponse> patch(url: String, payload: Any): TResponse? {
+    fun patch(url: String, payload: Any): String? {
         val json = Gson().toJson(payload)
 
         val body = json.toRequestBody(JsonMediaType)
@@ -41,8 +39,7 @@ object HttpClient {
 
         return try {
             val response = client.newCall(request).execute()
-            val responseJson = response.body?.string()
-            Gson().fromJson(responseJson, object : TypeToken<TResponse>() {}.type)
+            return response.body?.string()
         } catch (e: Exception) {
             null
         }

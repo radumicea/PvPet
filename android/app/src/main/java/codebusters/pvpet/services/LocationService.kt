@@ -4,7 +4,6 @@ import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import codebusters.pvpet.constants.Constants
@@ -40,9 +39,7 @@ class LocationService : Service() {
                 )
 
                 if (enemyLocations != null) {
-                    Log.i("i", enemyLocations.toString())
-                } else {
-                    Log.e("e", "Error requesting")
+                    LocationProvider.enemyLocations.postValue(enemyLocations)
                 }
             }
             .launchIn(serviceScope)
