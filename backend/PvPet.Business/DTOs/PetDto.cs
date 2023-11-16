@@ -2,6 +2,27 @@
 
 public class PetDto
 {
+    private static readonly string[] variants = { "Slime", "Golem" };
+
+    public PetDto(string name, Guid accountId)
+    {
+        Id = Guid.NewGuid();
+        Name = name;
+        Variant = variants[Random.Shared.Next(variants.Length)];
+        Hp = 100;
+        Food = 100;
+        Starvation = 0;
+        Attack = 10;
+        Armor = 5;
+        AttackSpeed = 1.0;
+        Crit = 0;
+        AccountId = accountId;
+    }
+
+    public PetDto()
+    {
+    }
+
     public Guid Id { get; set; }
 
     public string? Name { get; set; }
@@ -18,7 +39,7 @@ public class PetDto
 
     public int? Armor { get; set; }
 
-    public int? AttackSpeed { get; set; }
+    public double? AttackSpeed { get; set; }
 
     public int? Crit { get; set; }
 
@@ -29,4 +50,6 @@ public class PetDto
     public Guid? AccountId { get; set; }
 
     public AccountDto? Account { get; set; }
+
+    public ICollection<ItemDto>? Items { get; set; }
 }

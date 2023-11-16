@@ -16,7 +16,7 @@ public class Pet : Entity
 
     public int Armor { get; set; }
 
-    public int AttackSpeed { get; set; }
+    public double AttackSpeed { get; set; }
 
     public int Crit { get; set; }
 
@@ -27,4 +27,6 @@ public class Pet : Entity
     public Guid AccountId { get; set; }
 
     public Account Account { get; set; } = default!;
+
+    public ICollection<Item> Items { get; set; } = default!;
 }
