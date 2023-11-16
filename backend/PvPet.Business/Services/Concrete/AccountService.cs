@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Security.Claims;
-using System.Xml;
 using AutoMapper;
 using Crop360.Business.Services.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,11 +21,9 @@ public class AccountService : BaseService<Account,AccountDto> ,IAccountService
     {
         var user = await QuerySingleAsync(predicate: dto => dto.Username == request.Username);
         if (user == null)
-        {
             throw new ResponseStatusException(HttpStatusCode.Unauthorized);
-        }
 
-        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password)) 
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             throw new ResponseStatusException(HttpStatusCode.Unauthorized);
 
         var nameClaim = new Claim(ClaimTypes.Name, user.Username);

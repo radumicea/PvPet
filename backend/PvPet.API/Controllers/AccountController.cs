@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PvPet.Business.DTOs;
 using PvPet.Business.Services.Contracts;
@@ -41,12 +38,5 @@ namespace PvPet.API.Controllers
             await HttpContext.SignOutAsync();
             return Ok();
         }
-
-        [HttpGet("test")]
-        public string AccountName()
-        {
-            return HttpContext.User.Claims.First().Value;
-        }
-
     }
 }

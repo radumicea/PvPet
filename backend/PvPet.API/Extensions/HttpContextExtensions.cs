@@ -6,6 +6,6 @@ public static class HttpContextExtensions
     {
         // return context.User.Claims.FirstOrDefault()?.Value;
         // Until we implement auth on client side:
-        return Guid.Parse("3B5625EB-CC25-4F97-A3FB-8BBFB76BCD14");
+        return Guid.Parse("4F2BD20E-2B7C-460C-B338-BA774AE18E74");
     }
 }

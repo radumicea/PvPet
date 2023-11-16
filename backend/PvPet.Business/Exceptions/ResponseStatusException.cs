@@ -11,7 +11,7 @@ internal class ResponseStatusException : Exception
         StatusCode = statusCode;
     }
 
-    public ResponseStatusException(HttpStatusCode statusCode,string message) : base(message)
+    public ResponseStatusException(HttpStatusCode statusCode, string message) : base(message)
     {
         StatusCode = statusCode;
     }
