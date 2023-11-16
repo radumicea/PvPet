@@ -18,32 +18,28 @@ object HttpClient {
         .writeTimeout(2, TimeUnit.SECONDS)
         .build()
 
-
-    fun post(
+    fun <T> post(
         url: String,
         payload: Any,
-        jsonType: JsonType,
-        clazz: Class<*>? = null
-    ): Any {
-        return doRequest(url, HttpMethod.POST, payload, jsonType, clazz)
+        typeToken: TypeToken<T>
+    ): T {
+        return doRequest(url, HttpMethod.POST, payload, typeToken)
     }
 
-    fun patch(
+    fun <T> patch(
         url: String,
         payload: Any,
-        jsonType: JsonType,
-        clazz: Class<*>? = null
-    ): Any {
-        return doRequest(url, HttpMethod.PATCH, payload, jsonType, clazz)
+        typeToken: TypeToken<T>
+    ): T {
+        return doRequest(url, HttpMethod.PATCH, payload, typeToken)
     }
 
-    private fun doRequest(
+    private fun <T> doRequest(
         url: String,
         httpMethod: HttpMethod,
         payload: Any? = null,
-        jsonType: JsonType,
-        clazz: Class<*>? = null
-    ): Any {
+        typeToken: TypeToken<T>
+    ): T {
         val body = if (payload != null) {
             val json = Gson().toJson(payload)
             json.toRequestBody(JsonMediaType)
@@ -60,28 +56,9 @@ object HttpClient {
         }
         val request = requestBuilder.build()
 
-        val response = client.newCall(request).execute()
+        val responseJson = client.newCall(request).execute().body?.string()
 
-        return when (jsonType) {
-            JsonType.NONE -> Unit
-
-            JsonType.OBJECT -> {
-                val responseJson = response.body?.string()
-                Gson().fromJson(responseJson, clazz)
-            }
-
-            JsonType.COLLECTION -> {
-                val responseJson = response.body?.string()
-                Gson().fromJson(
-                    responseJson,
-                    TypeToken.getParameterized(List::class.java, clazz).type
-                )
-            }
-        }
-    }
-
-    enum class JsonType {
-        NONE, OBJECT, COLLECTION
+        return Gson().fromJson(responseJson, typeToken.type)
     }
 
     private enum class HttpMethod {

@@ -41,7 +41,8 @@ class LocationService : Service() {
                     )
 
                     LocationProvider.enemyLocations.postValue(enemyLocations)
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
             .launchIn(serviceScope)
