@@ -30,17 +30,18 @@ class LocationService : Service() {
 
         LocationProvider.getLocationUpdates(Constants.TICK_IN_MS)
             .onEach { location ->
-                val enemyLocations = GameDataAccessor.updatePetLocation(
-                    Pet(
-                        // TO DO
-                        id = "3B5625EB-CC25-4F97-A3FB-8BBFB76BCD14",
-                        latitude = location.latitude,
-                        longitude = location.longitude
+                try {
+                    val enemyLocations = GameDataAccessor.updatePetLocation(
+                        Pet(
+                            // TO DO
+                            id = "3B5625EB-CC25-4F97-A3FB-8BBFB76BCD14",
+                            latitude = location.latitude,
+                            longitude = location.longitude
+                        )
                     )
-                )
 
-                if (enemyLocations != null) {
                     LocationProvider.enemyLocations.postValue(enemyLocations)
+                } catch (_: Exception) {
                 }
             }
             .launchIn(serviceScope)
