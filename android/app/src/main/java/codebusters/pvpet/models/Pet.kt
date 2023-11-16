@@ -9,7 +9,7 @@ data class Pet(
     val starvation: Int? = null,
     val attack: Int? = null,
     val armor: Int? = null,
-    val attackSpeed: Int? = null,
+    val attackSpeed: Double? = null,
     val crit: Int? = null,
     val latitude: Double? = null,
     val longitude: Double? = null,

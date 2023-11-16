@@ -25,6 +25,10 @@ object HttpClient {
 
         return try {
             val response = client.newCall(request).execute()
+            if (!response.isSuccessful) {
+                return null
+            }
+
             return response.body?.string()
         } catch (e: Exception) {
             null
@@ -39,6 +43,10 @@ object HttpClient {
 
         return try {
             val response = client.newCall(request).execute()
+            if (!response.isSuccessful) {
+                return null
+            }
+
             return response.body?.string()
         } catch (e: Exception) {
             null

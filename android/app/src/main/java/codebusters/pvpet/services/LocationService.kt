@@ -32,7 +32,8 @@ class LocationService : Service() {
             .onEach { location ->
                 val enemyLocations = GameDataAccessor.updatePetLocation(
                     Pet(
-                        id = "1F6DBB97-B39A-46AA-A66D-15B5894675DD",
+                        // TO DO
+                        id = "3B5625EB-CC25-4F97-A3FB-8BBFB76BCD14",
                         latitude = location.latitude,
                         longitude = location.longitude
                     )
