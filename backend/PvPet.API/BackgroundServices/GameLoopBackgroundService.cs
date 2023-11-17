@@ -56,7 +56,9 @@ public class GameLoopBackgroundService : BackgroundService
                 var p1 = pets[i];
                 var p2 = pets[j];
 
-                if (ComputeDistance(p1.Latitude!.Value, p2.Latitude!.Value, p1.Longitude!.Value, p2.Longitude!.Value) < FightRange)
+                var distance = ComputeDistance(p1.Latitude!.Value, p2.Latitude!.Value, p1.Longitude!.Value, p2.Longitude!.Value);
+
+                if (distance <= FightRange)
                 {
                     (var winner, var loser) = await Fight(p1, p2, petService);
                     winners.Add(winner);
@@ -85,7 +87,9 @@ public class GameLoopBackgroundService : BackgroundService
 
             foreach (var pet in pets)
             {
-                if (ComputeDistance(item.Latitude!.Value, pet.Latitude!.Value, item.Longitude!.Value, pet.Longitude!.Value) <= PickupRange)
+                var distance = ComputeDistance(item.Latitude!.Value, pet.Latitude!.Value, item.Longitude!.Value, pet.Longitude!.Value);
+
+                if (distance <= PickupRange)
                 {
                     isTaken = true;
                     item.PetId = pet.Id;
