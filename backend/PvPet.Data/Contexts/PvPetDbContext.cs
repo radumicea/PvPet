@@ -10,12 +10,18 @@ public class PvPetDbContext : DbContext
     }
 
     public DbSet<Book> Books { get; set; }
+
     public DbSet<Category> Categories { get; set; }
+
     public DbSet<BookCategory> BookCategories { get; set; }
 
     public DbSet<User> Users { get; set; }
 
     public DbSet<Pet> Pets { get; set; }
+
+    public DbSet<ItemOnMap> ItemsOnMap { get; set; }
+
+    public DbSet<Item> Items { get; set; }
 
     public async Task InitAsync()
     {
@@ -55,11 +61,12 @@ public class PvPetDbContext : DbContext
 
         modelBuilder.Entity<User>()
             .HasOne(acc => acc.Pet)
-            .WithOne(pet => pet.User);
+            .WithOne(pet => pet.User)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Pet>()
             .HasMany(pet => pet.Items)
-            .WithOne()
+            .WithOne(item => item.Pet)
             .HasForeignKey(item => item.PetId)
             .OnDelete(DeleteBehavior.Cascade);
     }

@@ -12,6 +12,8 @@ public static class ServicesSettingsExtension
         services.AddTransient<IBookCategoryService, BookCategoryService>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IPetService, PetService>();
+        services.AddTransient<IItemOnMapService, ItemOnMapService>();
+        services.AddTransient<IItemService, ItemService>();
 
         return services;
     }

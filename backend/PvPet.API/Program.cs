@@ -4,6 +4,8 @@ using PvPet.API.Configurations;
 using PvPet.Data.Contexts;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Hosting;
+using PvPet.API.BackgroundServices;
 // using PvPet.API.Middleware;
 
 const string myPolicy = "MyPolicy";
@@ -45,6 +47,8 @@ builder.Services.AddSingleton<AutoMapper.IConfigurationProvider>
     .AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<AutoMapper.IConfigurationProvider>(), sp.GetService));
 
 builder.Services.RegisterBusinessServices();
+
+builder.Services.AddHostedService<GameLoopBackgroundService>();
 
 builder.Services
     .AddControllers()
