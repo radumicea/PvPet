@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 object GameLoopDataAccessor {
     fun updatePetLocation(pet: Pet): List<LatLng> {
         return HttpClient.patch(
-            "${BuildConfig.API_URI}/Game/updatePetLocation",
+            "${BuildConfig.API_URI}/GameLoop/updatePetLocation",
             pet,
             object : TypeToken<List<LatLng>>() {})
     }

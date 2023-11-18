@@ -56,7 +56,12 @@ object HttpClient {
         }
         val request = requestBuilder.build()
 
-        val responseJson = client.newCall(request).execute().body?.string()
+        val response = client.newCall(request).execute()
+        if (!response.isSuccessful) {
+            throw Exception(response.message)
+        }
+
+        val responseJson = response.body?.string()
 
         return Gson().fromJson(responseJson, typeToken.type)
     }
