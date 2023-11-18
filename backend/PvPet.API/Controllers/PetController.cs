@@ -19,7 +19,7 @@ public class PetController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] PetDto model)
     {
-        var pet = new PetDto(model.Name, HttpContext.GetUserId());
+        var pet = new PetDto(model.Name!, HttpContext.GetUserId());
         var id = await _service.AddAsync(pet);
 
         return id != Guid.Empty

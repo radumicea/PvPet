@@ -1,5 +1,7 @@
 package codebusters.pvpet.models
 
+import com.google.android.gms.maps.model.LatLng
+
 data class Pet(
     val id: String,
     val name: String? = null,
@@ -11,7 +13,6 @@ data class Pet(
     val armor: Int? = null,
     val attackSpeed: Double? = null,
     val crit: Int? = null,
-    val latitude: Double? = null,
-    val longitude: Double? = null,
+    val location: LatLng? = null,
     val accountId: String? = null
 )

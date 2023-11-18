@@ -12,9 +12,7 @@ public class ItemDto
 
     public int? Crit { get; set; }
 
-    public double? Latitude { get; set; }
-
-    public double? Longitude { get; set; }
+    public LocationDto? Location { get; set; }
 
     public int? SecondsLeft { get; set; }
 

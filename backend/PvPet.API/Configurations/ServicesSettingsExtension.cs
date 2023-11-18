@@ -7,9 +7,6 @@ public static class ServicesSettingsExtension
 {
     public static IServiceCollection RegisterBusinessServices(this IServiceCollection services)
     {
-        services.AddTransient<IBookService, BookService>();
-        services.AddTransient<ICategoryService, CategoryService>();
-        services.AddTransient<IBookCategoryService, BookCategoryService>();
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IPetService, PetService>();
         services.AddTransient<IItemOnMapService, ItemOnMapService>();

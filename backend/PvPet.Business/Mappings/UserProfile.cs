@@ -9,11 +9,10 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<User, UserDto>()
-            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.PasswordHash));
-            // Map PasswordHash to Password
+            .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.PasswordHash))
+            .ForAllMembers(u => u.ExplicitExpansion());
 
         CreateMap<UserDto, User>()
             .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
-        // Map Password to PasswordHash
     }
 }

@@ -6,4 +6,5 @@ namespace PvPet.Business.Services.Contracts;
 
 public interface IPetService : IBaseService<Pet, PetDto>
 {
+    Task<IEnumerable<(PetDto, PetDto)>> GetClosestPairsInRange(double range);
 }

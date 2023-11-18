@@ -9,7 +9,7 @@ public class ItemProfile : Profile
     public ItemProfile()
     {
         CreateMap<Item, ItemDto>()
-            .ForAllMembers(c => c.ExplicitExpansion());
+            .ForAllMembers(i => i.ExplicitExpansion());
         CreateMap<ItemDto, Item>();
     }
 }

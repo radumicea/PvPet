@@ -9,12 +9,6 @@ public class PvPetDbContext : DbContext
     {
     }
 
-    public DbSet<Book> Books { get; set; }
-
-    public DbSet<Category> Categories { get; set; }
-
-    public DbSet<BookCategory> BookCategories { get; set; }
-
     public DbSet<User> Users { get; set; }
 
     public DbSet<Pet> Pets { get; set; }
@@ -30,6 +24,8 @@ public class PvPetDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasPostgresExtension("postgis");
+
         AddConstraints(modelBuilder);
         AddForeignKeys(modelBuilder);
         SeedData(modelBuilder);
@@ -49,26 +45,22 @@ public class PvPetDbContext : DbContext
 
     private void AddForeignKeys(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<BookCategory>()
-            .HasOne(bc => bc.Book)
-            .WithMany(b => b.BookCategories)
-            .HasForeignKey(bc => bc.BookId);
-
-        modelBuilder.Entity<BookCategory>()
-            .HasOne(bc => bc.Category)
-            .WithMany(c => c.BookCategories)
-            .HasForeignKey(bc => bc.CategoryId);
-
         modelBuilder.Entity<User>()
             .HasOne(acc => acc.Pet)
-            .WithOne(pet => pet.User)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithOne(pet => pet.User);
 
         modelBuilder.Entity<Pet>()
             .HasMany(pet => pet.Items)
             .WithOne(item => item.Pet)
-            .HasForeignKey(item => item.PetId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(item => item.PetId);
+
+        modelBuilder.Entity<Pet>()
+            .Property(e => e.Location)
+            .HasColumnType("geography (point)");
+
+        modelBuilder.Entity<ItemOnMap>()
+            .Property(e => e.Location)
+            .HasColumnType("geography (point)");
     }
 
     private void AddConstraints(ModelBuilder modelBuilder)

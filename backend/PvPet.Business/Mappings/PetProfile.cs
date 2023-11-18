@@ -9,7 +9,7 @@ public class PetProfile : Profile
     public PetProfile()
     {
         CreateMap<Pet, PetDto>()
-            .ForAllMembers(c => c.ExplicitExpansion());
+            .ForAllMembers(p => p.ExplicitExpansion());
         CreateMap<PetDto, Pet>();
     }
 }

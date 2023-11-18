@@ -10,6 +10,7 @@ import codebusters.pvpet.constants.Constants
 import codebusters.pvpet.data_access.GameLoopDataAccessor
 import codebusters.pvpet.models.Pet
 import codebusters.pvpet.providers.LocationProvider
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -35,8 +36,10 @@ class LocationService : Service() {
                         Pet(
                             // TO DO
                             id = "3B5625EB-CC25-4F97-A3FB-8BBFB76BCD14",
-                            latitude = location.latitude,
-                            longitude = location.longitude
+                            location = LatLng(
+                                location.latitude,
+                                location.longitude
+                            )
                         )
                     )
 

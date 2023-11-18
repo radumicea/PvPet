@@ -16,6 +16,7 @@ public class PetDto
         Armor = 5;
         AttackSpeed = 1.0;
         Crit = 0;
+        Location = new LocationDto { Latitude = 0, Longitude = 0 };
         UserId = userId;
     }
 
@@ -43,9 +44,7 @@ public class PetDto
 
     public int? Crit { get; set; }
 
-    public double? Latitude { get; set; }
-
-    public double? Longitude { get; set; }
+    public LocationDto? Location { get; set; }
 
     public Guid? UserId { get; set; }
 
