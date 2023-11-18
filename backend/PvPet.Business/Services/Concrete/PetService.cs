@@ -17,7 +17,7 @@ public class PetService : BaseService<Pet, PetDto>, IPetService
     {
         var query =
             from p1 in _entitiesSet
-            from p2 in _entitiesSet.Where(p2 => p1.Id != p2.Id && p1.Location.Distance(p2.Location) <= range)
+            from p2 in _entitiesSet.Where(p2 => p2.Id > p1.Id && p2.Location.Distance(p1.Location) <= range)
             orderby p1.Location.Distance(p2.Location)
             select new { p1, p2 };
 
