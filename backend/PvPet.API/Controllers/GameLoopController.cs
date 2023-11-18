@@ -24,7 +24,7 @@ public class GameLoopController : ControllerBase
         }
 
         var enemyLocations = (await _petService.QueryAsync(predicate: pet => pet.Id != update.Id))
-            .Select(pet => new { pet.Latitude, pet.Longitude })
+            .Select(pet => pet.Location)
             .ToList();
 
         return Ok(enemyLocations);

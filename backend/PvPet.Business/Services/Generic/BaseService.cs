@@ -11,9 +11,9 @@ public class BaseService<TEntity, TDto> : IBaseService<TEntity, TDto>
     where TEntity : Entity
     where TDto : class
 {
-    private readonly DbContext _context;
-    private readonly IMapper _mapper;
-    private readonly DbSet<TEntity> _entitiesSet;
+    protected readonly DbContext _context;
+    protected readonly IMapper _mapper;
+    protected readonly DbSet<TEntity> _entitiesSet;
 
     public BaseService(DbContext context, IMapper mapper)
     {
@@ -72,12 +72,14 @@ public class BaseService<TEntity, TDto> : IBaseService<TEntity, TDto>
         foreach (var prop in typeof(TDto).GetProperties())
         {
             var value = prop.GetValue(model, null);
-            if (value is not null)
+            if (value is null)
             {
-                if (entry.Properties.Any(p => p.Metadata.Name == prop.Name && !p.Metadata.IsKey()))
-                {
-                    entry.Property(prop.Name).IsModified = true;
-                }
+                continue;
+            }
+             
+            if (entry.Properties.Any(p => p.Metadata.Name == prop.Name && !p.Metadata.IsKey()))
+            {
+                entry.Property(prop.Name).IsModified = true;
             }
         }
 

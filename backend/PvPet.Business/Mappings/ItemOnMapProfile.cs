@@ -9,7 +9,7 @@ public class ItemOnMapProfile : Profile
 	public ItemOnMapProfile()
 	{
         CreateMap<ItemOnMap, ItemDto>()
-            .ForAllMembers(bc => bc.ExplicitExpansion());
+            .ForAllMembers(i => i.ExplicitExpansion());
         CreateMap<ItemDto, ItemOnMap>();
     }
 }

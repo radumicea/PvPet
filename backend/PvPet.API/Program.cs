@@ -30,11 +30,18 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<DbContext, PvPetDbContext>(options =>
-    options.UseSqlite(
-        builder.Configuration.GetConnectionString("Database"),
-        // Avoid cartesian explosion
-        o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
-    );
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+    options.UseNpgsql(
+        connectionString,
+        o =>
+        {
+            // Avoid cartesian explosion
+            o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+            o.UseNetTopologySuite();
+        });
+});
 
 builder.Services.AddSingleton<AutoMapper.IConfigurationProvider>
     (

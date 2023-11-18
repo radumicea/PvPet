@@ -1,10 +1,10 @@
-﻿namespace PvPet.Data.Entities;
+﻿using NetTopologySuite.Geometries;
+
+namespace PvPet.Data.Entities;
 
 public class ItemOnMap : ItemBase
 {
-    public double Latitude { get; set; }
-
-    public double Longitude { get; set; }
+    public Point Location { get; set; } = default!;
 
     public int SecondsLeft { get; set; }
 }

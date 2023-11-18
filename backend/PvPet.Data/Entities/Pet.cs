@@ -1,4 +1,6 @@
-﻿namespace PvPet.Data.Entities;
+﻿using NetTopologySuite.Geometries;
+
+namespace PvPet.Data.Entities;
 
 public class Pet : Entity
 {
@@ -20,9 +22,7 @@ public class Pet : Entity
 
     public int Crit { get; set; }
 
-    public double Latitude { get; set; }
-
-    public double Longitude { get; set; }
+    public Point Location { get; set; } = default!;
 
     public Guid UserId { get; set; }
 

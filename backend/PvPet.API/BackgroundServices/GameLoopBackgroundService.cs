@@ -34,115 +34,59 @@ public class GameLoopBackgroundService : BackgroundService
         await using var scope = _serviceScopeFactory.CreateAsyncScope();
 
         var petService = scope.ServiceProvider.GetRequiredService<IPetService>();
-        var pets = (await petService.QueryAsync()).ToList();
-
         var itemOnMapService = scope.ServiceProvider.GetRequiredService<IItemOnMapService>();
-        var itemsOnMap = (await itemOnMapService.QueryAsync()).ToList();
         var itemService = scope.ServiceProvider.GetRequiredService<IItemService>();
 
-        (var winners, var losers) = await CommenceFights(pets, petService);
-        var items = await UpdateItemsOnMap(itemsOnMap, itemOnMapService, itemService, pets);
+        (var winners, var losers) = await CommenceFights(petService);
+        var items = await UpdateItemsOnMap(itemOnMapService, itemService);
     }
 
-    private static async Task<(List<Guid> Winners, List<Guid> Losers)> CommenceFights(List<PetDto> pets, IPetService petService)
+    private static async Task<(List<Guid> Winners, List<Guid> Losers)> CommenceFights(IPetService petService)
     {
         var winners = new List<Guid>();
         var losers = new List<Guid>();
 
-        for (var i = 0; i < pets.Count - 1; i++)
+        var pairs = await petService.GetClosestPairsInRange(FightRange);
+        foreach ((var p1, var p2) in pairs)
         {
-            for (var j = i + 1; j < pets.Count; j++)
-            {
-                var p1 = pets[i];
-                var p2 = pets[j];
-
-                var distance = ComputeDistance(p1.Latitude!.Value, p2.Latitude!.Value, p1.Longitude!.Value, p2.Longitude!.Value);
-
-                if (distance <= FightRange)
-                {
-                    (var winner, var loser) = await Fight(p1, p2, petService);
-                    winners.Add(winner);
-                    losers.Add(loser);
-                }
-            }
+            (var winner, var loser) = await Fight(p1, p2, petService);
+            winners.Add(winner);
+            losers.Add(loser);
         }
 
         return (winners, losers);
     }
 
-    private static async Task<List<ItemDto>> UpdateItemsOnMap(
-        List<ItemDto> itemsOnMap,
-        IItemOnMapService itemOnMapService,
-        IItemService itemService,
-        List<PetDto> pets
-        )
+    private static async Task<List<ItemDto>> UpdateItemsOnMap(IItemOnMapService itemOnMapService, IItemService itemService)
     {
-        var n = itemsOnMap.Count;
-
-        foreach (var item in itemsOnMap)
+        var pairs = await itemOnMapService.GetItemsWithClosestPetInRange(PickupRange);
+        foreach ((var item, var pet) in pairs)
         {
-            item.SecondsLeft -= SecondsInTick;
-         
-            var isTaken = false;
-
-            foreach (var pet in pets)
-            {
-                var distance = ComputeDistance(item.Latitude!.Value, pet.Latitude!.Value, item.Longitude!.Value, pet.Longitude!.Value);
-
-                if (distance <= PickupRange)
-                {
-                    isTaken = true;
-                    item.PetId = pet.Id;
-                    await itemService.AddAsync(item);
-                    break;
-                }
-            }
-
-            if (isTaken || item.SecondsLeft <= 0)
-            {
-                await itemOnMapService.DeleteAsync(item);
-                n--;
-            }
-            else
-            {
-                await itemOnMapService.UpdateAsync(item);
-            }
+            item.PetId = pet.Id;
+            await itemService.AddAsync(item);
         }
 
-        var newItems = Enumerable.Range(0, NrItemsOnMap - n).Select(_ => new ItemDto
+        var remaining = await itemOnMapService
+            .UpdateAvailability(SecondsInTick, pairs.Select(pair => pair.Item1.Id).ToHashSet());
+
+        // TO DO
+        var newItems = Enumerable.Range(0, NrItemsOnMap - remaining).Select(_ => new ItemDto
         {
             Attack = 1,
             Armor = 0,
             AttackSpeed = 0,
             Crit = 0,
-            Latitude = Random.Shared.NextDouble(46.17, 46.18),
-            Longitude = Random.Shared.NextDouble(21.3, 21.4),
+            Location = new LocationDto
+            {
+                Latitude = Random.Shared.NextDouble(46.17, 46.18),
+                Longitude = Random.Shared.NextDouble(21.3, 21.4)
+            },
             SecondsLeft = Random.Shared.Next(300, 3600)
         }).ToList();
 
         await itemOnMapService.AddRangeAsync(newItems);
 
         return (await itemOnMapService.QueryAsync()).ToList();
-    }
-
-    private static double ComputeDistance(double lat1, double lat2, double lon1, double lon2)
-    {
-        // Earth's mean radius in meter
-        var R = 6371e3;
-        // convert to radiant
-        var φ1 = lat1 * Math.PI / 180;
-        var φ2 = lat2 * Math.PI / 180;
-        var Δφ = (lat2 - lat1) * Math.PI / 180;
-        var Δλ = (lon2 - lon1) * Math.PI / 180;
-
-        var sinHalfΔφ = Math.Sin(Δφ / 2);
-        var sinHalfΔλ = Math.Sin(Δλ / 2);
-
-        var a = sinHalfΔφ * sinHalfΔφ + Math.Cos(φ1) * Math.Cos(φ2) * sinHalfΔλ * sinHalfΔλ;
-        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-
-        // In meteres
-        return R * c;
     }
 
     private static async Task<(Guid Winner, Guid Loser)> Fight(PetDto p1, PetDto p2, IPetService petService)
