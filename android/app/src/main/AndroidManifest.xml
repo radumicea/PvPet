@@ -30,8 +30,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.MapActivity" />
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
