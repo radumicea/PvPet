@@ -1,12 +1,12 @@
 # PvPet
 
-A Tamagotchi inspired, retro style game where players can raise their PvPet, do battles in real time, and find powerful items scattered throughout the city.
+A Tamagotchi inspired, retro style game where players can raise their PvPet, battle in real time, and find powerful items scattered throughout the city.
 
 ## Features
 
 ### Tamagotchi inspired "Raise your Pet" Gameplay
 
-Witness your pet's growth through feeding, training, and equipping it with powerful items, shaping it into a formidable warrior.
+Raise your pet by feeding, training, and equipping it with powerful items, shaping it into a formidable warrior.
 
 ### Real-time PvP and PvE Battles
 
