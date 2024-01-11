@@ -14,7 +14,7 @@ class AppInitializer : Initializer<Unit> {
         val channel = NotificationChannel(
             Constants.NOTIFICATION_CHANNEL_ID,
             "PvPet Notification Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_HIGH
         )
         channel.description = "Notification Channel for PvPet"
         val notificationManager = getSystemService(context, NotificationManager::class.java)

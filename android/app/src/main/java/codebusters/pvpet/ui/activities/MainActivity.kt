@@ -1,6 +1,5 @@
 package codebusters.pvpet.ui.activities
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -10,7 +9,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import codebusters.pvpet.R
-import codebusters.pvpet.constants.Constants
 import codebusters.pvpet.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -30,13 +28,6 @@ class MainActivity : AppCompatActivity() {
             // ignore the reselection
         }
         activityMainBinding.navigation.setOnItemSelectedListener { menuItem ->
-            if (Constants.PERMISSIONS_REQUIRED.any {
-                    checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
-                }) {
-                navController.navigate(R.id.permissions_fragment)
-                return@setOnItemSelectedListener false
-            }
-
             when (menuItem.itemId) {
                 R.id.menu_item_home -> {
                     navController.navigate(R.id.home_fragment)
@@ -67,17 +58,6 @@ class MainActivity : AppCompatActivity() {
             controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // Make sure that all permissions are still present, since the
-        // user could have removed them while the app was in paused state.
-        if (Constants.PERMISSIONS_REQUIRED.any {
-                checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED
-            }) {
-            navController.navigate(R.id.permissions_fragment)
         }
     }
 }

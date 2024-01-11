@@ -1,26 +1,23 @@
 package codebusters.pvpet.ui.fragments
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withStarted
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import codebusters.pvpet.R
 import codebusters.pvpet.constants.Constants
-import kotlinx.coroutines.launch
+import codebusters.pvpet.providers.LocationProvider
+import codebusters.pvpet.services.LocationService
 
 class PermissionsFragment : Fragment() {
     companion object {
         private var toast: Toast? = null
     }
-
-    private lateinit var navController: NavController
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -29,7 +26,7 @@ class PermissionsFragment : Fragment() {
             if (Constants.PERMISSIONS_REQUIRED.all {
                     permissions[it] == true
                 }) {
-                navigateHome()
+                permissionsAccepted()
             } else {
                 toast?.cancel()
                 toast = Toast.makeText(
@@ -43,7 +40,6 @@ class PermissionsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navController = findNavController()
         askForPermission()
     }
 
@@ -54,7 +50,7 @@ class PermissionsFragment : Fragment() {
                     it
                 ) == PackageManager.PERMISSION_GRANTED
             }) {
-            navigateHome()
+            permissionsAccepted()
         } else if (Constants.PERMISSIONS_REQUIRED.any {
                 shouldShowRequestPermissionRationale(
                     it
@@ -76,11 +72,14 @@ class PermissionsFragment : Fragment() {
         }
     }
 
-    private fun navigateHome() {
-        lifecycleScope.launch {
-            withStarted {
-                navController.navigate(R.id.home_fragment)
-            }
-        }
+    private fun permissionsAccepted() {
+        // init location provider
+        LocationProvider.init(requireContext())
+
+        // start location service
+        val serviceIntent = Intent(requireContext(), LocationService::class.java)
+        startForegroundService(requireContext(), serviceIntent)
+
+        findNavController().popBackStack()
     }
 }
