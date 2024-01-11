@@ -8,8 +8,16 @@ public class ItemProfile : Profile
 {
     public ItemProfile()
     {
-        CreateMap<Item, ItemDto>()
+        CreateMap<ItemType, ItemTypeDto>()
             .ForAllMembers(i => i.ExplicitExpansion());
-        CreateMap<ItemDto, Item>();
+        CreateMap<ItemTypeDto, ItemType>();
+
+        CreateMap<ItemOnMap, ItemOnMapDto>()
+            .ForAllMembers(i => i.ExplicitExpansion());
+        CreateMap<ItemOnMapDto, ItemOnMap>();
+
+        CreateMap<ShopItem, ShopItemDto>()
+            .ForAllMembers(i => i.ExplicitExpansion());
+        CreateMap<ShopItemDto, ShopItem>();
     }
 }

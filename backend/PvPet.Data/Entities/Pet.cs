@@ -6,13 +6,13 @@ public class Pet : Entity
 {
     public string Name { get; set; } = default!;
 
-    public string Variant { get; set; } = default!;
+    public int Variant { get; set; }
 
     public int Hp { get; set; }
 
     public int Food { get; set; }
 
-    public int Starvation { get; set; }
+    public int Gold { get; set; }
 
     public int Attack { get; set; }
 
@@ -27,6 +27,4 @@ public class Pet : Entity
     public Guid UserId { get; set; }
 
     public User User { get; set; } = default!;
-
-    public ICollection<Item> Items { get; set; } = default!;
 }

@@ -4,9 +4,9 @@ using PvPet.Data.Entities;
 
 namespace PvPet.Business.Services.Contracts
 {
-    public interface IItemOnMapService : IBaseService<ItemOnMap, ItemDto>
+    public interface IItemOnMapService : IBaseService<ItemOnMap, ItemOnMapDto>
     {
-        Task<IEnumerable<(ItemDto, PetDto)>> GetItemsWithClosestPetInRange(double range);
+        Task<IEnumerable<(ItemOnMapDto, PetDto)>> GetItemsWithClosestPetInRange(double range);
         Task<int> UpdateAvailability(int elapsedSeconds, HashSet<Guid> collected);
     }
 }

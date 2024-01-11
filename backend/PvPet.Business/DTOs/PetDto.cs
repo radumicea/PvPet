@@ -2,23 +2,7 @@
 
 public class PetDto
 {
-    private static readonly string[] variants = { "Slime", "Golem" };
-
-    public PetDto(string name, Guid userId)
-    {
-        Id = Guid.NewGuid();
-        Name = name;
-        Variant = variants[Random.Shared.Next(variants.Length)];
-        Hp = 100;
-        Food = 100;
-        Starvation = 0;
-        Attack = 10;
-        Armor = 5;
-        AttackSpeed = 1.0;
-        Crit = 0;
-        Location = new LocationDto { Latitude = 0, Longitude = 0 };
-        UserId = userId;
-    }
+    private const int NumVariants = 9;
 
     public PetDto()
     {
@@ -28,13 +12,13 @@ public class PetDto
 
     public string? Name { get; set; }
 
-    public string? Variant { get; set; }
+    public int? Variant { get; set; }
 
     public int? Hp { get; set; }
 
     public int? Food { get; set; }
 
-    public int? Starvation { get; set; }
+    public int? Gold { get; set; }
 
     public int? Attack { get; set; }
 
@@ -50,5 +34,24 @@ public class PetDto
 
     public UserDto? User { get; set; }
 
-    public ICollection<ItemDto>? Items { get; set; }
+    public ICollection<ItemOnMapDto>? Items { get; set; }
+
+    public static PetDto New(string name, Guid userId)
+    {
+        return new PetDto
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Variant = Random.Shared.Next(NumVariants) + 1,
+            Hp = 100,
+            Food = 100,
+            Gold = 100,
+            Attack = 10,
+            Armor = 5,
+            AttackSpeed = 1.0,
+            Crit = 0,
+            Location = new LocationDto { Latitude = 0, Longitude = 0 },
+            UserId = userId
+        };
+    }
 }

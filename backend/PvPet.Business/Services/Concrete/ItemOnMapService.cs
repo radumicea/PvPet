@@ -7,13 +7,13 @@ using PvPet.Data.Entities;
 
 namespace PvPet.Business.Services.Concrete;
 
-public class ItemOnMapService : BaseService<ItemOnMap, ItemDto>, IItemOnMapService
+public class ItemOnMapService : BaseService<ItemOnMap, ItemOnMapDto>, IItemOnMapService
 {
     public ItemOnMapService(DbContext context, IMapper mapper) : base(context, mapper)
     {
     }
 
-    public async Task<IEnumerable<(ItemDto, PetDto)>> GetItemsWithClosestPetInRange(double range)
+    public async Task<IEnumerable<(ItemOnMapDto, PetDto)>> GetItemsWithClosestPetInRange(double range)
     {
         var query =
             from item in _entitiesSet
@@ -24,14 +24,14 @@ public class ItemOnMapService : BaseService<ItemOnMap, ItemDto>, IItemOnMapServi
         var pairs = await query.ToListAsync();
         var taken = new HashSet<Guid>();
 
-        var result = new List<(ItemDto, PetDto)>();
+        var result = new List<(ItemOnMapDto, PetDto)>();
 
         foreach (var pair in pairs)
         {
             if (taken.Contains(pair.item.Id))
                 continue;
 
-            result.Add((_mapper.Map<ItemDto>(pair.item), _mapper.Map<PetDto>(pair.pet)));
+            result.Add((_mapper.Map<ItemOnMapDto>(pair.item), _mapper.Map<PetDto>(pair.pet)));
 
             taken.Add(pair.item.Id);
         }

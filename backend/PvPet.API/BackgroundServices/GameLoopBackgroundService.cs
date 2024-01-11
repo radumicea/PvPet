@@ -1,5 +1,4 @@
-﻿using PvPet.API.Extensions;
-using PvPet.Business.DTOs;
+﻿using PvPet.Business.DTOs;
 using PvPet.Business.Services.Contracts;
 
 namespace PvPet.API.BackgroundServices;
@@ -35,10 +34,13 @@ public class GameLoopBackgroundService : BackgroundService
 
         var petService = scope.ServiceProvider.GetRequiredService<IPetService>();
         var itemOnMapService = scope.ServiceProvider.GetRequiredService<IItemOnMapService>();
-        var itemService = scope.ServiceProvider.GetRequiredService<IItemService>();
+        var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+        var shopItemService = scope.ServiceProvider.GetRequiredService<IShopItemService>();
 
         (var winners, var losers) = await CommenceFights(petService);
-        var items = await UpdateItemsOnMap(itemOnMapService, itemService);
+        var items = await UpdateItemsOnMap(itemOnMapService);
+        await userService.UpdateRestockTime(SecondsInTick);
+        await shopItemService.Restock();
     }
 
     private static async Task<(List<Guid> Winners, List<Guid> Losers)> CommenceFights(IPetService petService)
@@ -57,32 +59,26 @@ public class GameLoopBackgroundService : BackgroundService
         return (winners, losers);
     }
 
-    private static async Task<List<ItemDto>> UpdateItemsOnMap(IItemOnMapService itemOnMapService, IItemService itemService)
+    private static async Task<List<ItemOnMapDto>> UpdateItemsOnMap(IItemOnMapService itemOnMapService)
     {
         var pairs = await itemOnMapService.GetItemsWithClosestPetInRange(PickupRange);
         foreach ((var item, var pet) in pairs)
         {
-            item.PetId = pet.Id;
-            await itemService.AddAsync(item);
+            pet.Attack += item.Attack;
+            pet.Crit += item.Crit;
+            pet.Armor += item.Armor;
+            pet.AttackSpeed += item.AttackSpeed;
+            pet.Hp += item.Hp;
+            pet.Food += item.Food;
+            pet.Gold += item.Gold;
         }
 
         var remaining = await itemOnMapService
             .UpdateAvailability(SecondsInTick, pairs.Select(pair => pair.Item1.Id).ToHashSet());
 
-        // TO DO
-        var newItems = Enumerable.Range(0, NrItemsOnMap - remaining).Select(_ => new ItemDto
-        {
-            Attack = 1,
-            Armor = 0,
-            AttackSpeed = 0,
-            Crit = 0,
-            Location = new LocationDto
-            {
-                Latitude = Random.Shared.NextDouble(46.17, 46.18),
-                Longitude = Random.Shared.NextDouble(21.3, 21.4)
-            },
-            SecondsLeft = Random.Shared.Next(300, 3600)
-        }).ToList();
+        var newItems = Enumerable
+            .Range(0, NrItemsOnMap - remaining)
+            .Select(_ => ItemOnMapDto.New());
 
         await itemOnMapService.AddRangeAsync(newItems);
 
@@ -91,14 +87,40 @@ public class GameLoopBackgroundService : BackgroundService
 
     private static async Task<(Guid Winner, Guid Loser)> Fight(PetDto p1, PetDto p2, IPetService petService)
     {
-        // TO DO
-        if (Random.Shared.Next() % 2 == 0)
+        for (var i = 0; i < 5 && p1.Hp > 0 && p2.Hp > 0; i++)
         {
-            return (p1.Id, p2.Id);
+            if (Random.Shared.NextDouble() < p1.AttackSpeed / (p1.AttackSpeed + p2.AttackSpeed))
+            {
+                var dmg = p1.Attack - p2.Armor;
+                if (Random.Shared.NextDouble() < p1.Crit / 100.0)
+                    dmg *= 2;
+                p2.Hp -= Math.Max(dmg!.Value, 0);
+            }
+            else
+            {
+                var dmg = p2.Attack - p1.Armor;
+                if (Random.Shared.NextDouble() < p2.Crit / 100.0)
+                    dmg *= 2;
+                p2.Hp -= Math.Max(dmg!.Value, 0);
+            }
         }
+
+        if (p1.Hp > p2.Hp)
+        {
+            p1.Gold += p2.Gold / 2;
+            p2.Gold -= p2.Gold / 2;
+        }
+
         else
         {
-            return (p2.Id, p1.Id);
+            p2.Gold += p1.Gold / 2;
+            p1.Gold -= p1.Gold / 2;
         }
+
+        await petService.UpdateRangeAsync(new[] { p1, p2 });
+
+        return p1.Hp > p2.Hp
+            ? (p1.Id, p2.Id)
+            : (p2.Id, p1.Id);
     }
 }

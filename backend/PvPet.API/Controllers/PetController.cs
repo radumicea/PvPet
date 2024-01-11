@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PvPet.API.Extensions;
 using PvPet.Business.DTOs;
 using PvPet.Business.Services.Contracts;
@@ -9,17 +10,20 @@ namespace PvPet.API.Controllers;
 [ApiController]
 public class PetController : ControllerBase
 {
+    private readonly IUserService _userService;
     private readonly IPetService _service;
 
-    public PetController(IPetService petService)
+    public PetController(IUserService userService, IPetService petService)
     {
+        _userService = userService;
         _service = petService;
     }
 
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] PetDto model)
     {
-        var pet = new PetDto(model.Name!, HttpContext.GetUserId());
+        var user = await _userService.QuerySingleAsync(predicate: u => u.Username == HttpContext.GetUsername());
+        var pet = PetDto.New(model.Name!, user!.Id);
         var id = await _service.AddAsync(pet);
 
         return id != Guid.Empty
@@ -30,7 +34,7 @@ public class PetController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var pet = await _service.QuerySingleAsync(predicate: p => p.UserId == HttpContext.GetUserId());
+        var pet = await _service.QuerySingleAsync(include: p => p.Include(p => p.User!), predicate: p => p.User!.Username == HttpContext.GetUsername());
         return Ok(pet);
     }
 }

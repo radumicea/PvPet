@@ -15,8 +15,6 @@ public class PvPetDbContext : DbContext
 
     public DbSet<ItemOnMap> ItemsOnMap { get; set; }
 
-    public DbSet<Item> Items { get; set; }
-
     public async Task InitAsync()
     {
         await Database.EnsureCreatedAsync();
@@ -46,13 +44,12 @@ public class PvPetDbContext : DbContext
     private void AddForeignKeys(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
-            .HasOne(acc => acc.Pet)
+            .HasOne(u => u.Pet)
             .WithOne(pet => pet.User);
 
-        modelBuilder.Entity<Pet>()
-            .HasMany(pet => pet.Items)
-            .WithOne(item => item.Pet)
-            .HasForeignKey(item => item.PetId);
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.ShopItems)
+            .WithOne(item => item.User);
 
         modelBuilder.Entity<Pet>()
             .Property(e => e.Location)

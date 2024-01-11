@@ -10,7 +10,7 @@ public static class ServicesSettingsExtension
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<IPetService, PetService>();
         services.AddTransient<IItemOnMapService, ItemOnMapService>();
-        services.AddTransient<IItemService, ItemService>();
+        services.AddTransient<IShopItemService, ShopItemService>();
 
         return services;
     }
