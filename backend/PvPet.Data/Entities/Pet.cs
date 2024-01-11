@@ -37,5 +37,6 @@ public class Pet : Entity
     public User User { get; set; } = default!;
 
     public ICollection<Fight> Fights { get; set; } = null!;
+
     public ICollection<PetFight> PetsFights { get; set; } = null!;
 }

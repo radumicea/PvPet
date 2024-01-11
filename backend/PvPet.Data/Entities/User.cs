@@ -8,5 +8,5 @@ public class User : Entity
 
     public string PasswordHash { get; set; } = default!;
 
-    public Pet Pet { get; set; } = default!;
+    public Pet? Pet { get; set; }
 }

@@ -17,8 +17,7 @@ public class GameLoopController : ControllerBase
     public GameLoopController(
         IUserService userService,
         IPetService petService,
-        IItemOnMapService itemOnMapService,
-        IShopItemService shopItemService)
+        IItemOnMapService itemOnMapService)
     {
         _userService = userService;
         _petService = petService;
@@ -38,7 +37,7 @@ public class GameLoopController : ControllerBase
             return BadRequest();
         }
 
-        var pet = await _petService.QueryAsync(
+        var pet = await _petService.QuerySingleAsync(
             include: p => p.Include(p => p.PetsFights!).Include(u => u.ShopItems!).Include(p => p.Items!),
             predicate: p => p.UserId == user.Id
             );
