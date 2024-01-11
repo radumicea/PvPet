@@ -24,7 +24,7 @@ public class ItemProfile : Profile
             .ForAllMembers(i => i.ExplicitExpansion());
         CreateMap<PetItemDto, PetItem>();
 
-        CreateMap<ItemOnMapDto, PetItem>()
+        CreateMap<ItemOnMapDto, PetItemDto>()
             .ForAllMembers(i => i.ExplicitExpansion());
     }
 }

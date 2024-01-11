@@ -26,22 +26,10 @@ public class PvPetDbContext : DbContext
 
         AddConstraints(modelBuilder);
         AddForeignKeys(modelBuilder);
-        SeedData(modelBuilder);
-
+        AddIndexes(modelBuilder);
     }
 
-    private void SeedData(ModelBuilder modelBuilder)
-    {
-        SeedUsers(modelBuilder);
-        
-    }
-
-    private void SeedUsers(ModelBuilder modelBuilder)
-    {
-        
-    }
-
-    private void AddForeignKeys(ModelBuilder modelBuilder)
+    private static void AddForeignKeys(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
             .HasOne(u => u.Pet)
@@ -68,7 +56,7 @@ public class PvPetDbContext : DbContext
             .WithOne(r  => r.Fight);
     }
 
-    private void AddConstraints(ModelBuilder modelBuilder)
+    private static void AddConstraints(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>()
             .HasIndex(user => user.Username)
@@ -83,7 +71,7 @@ public class PvPetDbContext : DbContext
             .HasColumnType("geography (point)");
     }
 
-    private void AddIndexes(ModelBuilder modelBuilder)
+    private static void AddIndexes(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Pet>()
             .HasIndex(p => p.Location);

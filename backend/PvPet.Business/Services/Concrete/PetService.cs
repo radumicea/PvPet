@@ -9,19 +9,25 @@ namespace PvPet.Business.Services.Concrete;
 
 public class PetService : BaseService<Pet, PetDto>, IPetService
 {
-    public PetService(DbContext context, IMapper mapper) : base(context, mapper)
+    private readonly NotificationService _notificationService;
+
+    public PetService(DbContext context, IMapper mapper, NotificationService notificationService) : base(context, mapper)
     {
+        _notificationService = notificationService;
     }
 
     public override async Task<bool> DeleteAsync(PetDto pet)
     {
-        // TODO Send death notification
+        await _notificationService.NotifyPetOwner(pet.Id, "Your pet just died...");
         return await base.DeleteAsync(pet);
     }
 
     public override async Task<bool> DeleteRangeAsync(IEnumerable<PetDto> pets)
     {
-        // TODO Send death notification
+        foreach (var pet in pets)
+        {
+            await _notificationService.NotifyPetOwner(pet.Id, "Your pet just died...");
+        }
         return await base.DeleteRangeAsync(pets);
     }
 

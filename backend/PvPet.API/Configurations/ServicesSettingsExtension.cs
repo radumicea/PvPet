@@ -1,4 +1,5 @@
-﻿using PvPet.Business.Services.Concrete;
+﻿using PvPet.Business.Services;
+using PvPet.Business.Services.Concrete;
 using PvPet.Business.Services.Contracts;
 
 namespace PvPet.API.Configurations;
@@ -13,6 +14,7 @@ public static class ServicesSettingsExtension
         services.AddTransient<IShopItemService, ShopItemService>();
         services.AddTransient<IFightService, FightService>();
         services.AddTransient<IPetItemService, PetItemService>();
+        services.AddTransient<NotificationService>();
 
         return services;
     }

@@ -44,15 +44,15 @@ public abstract class ItemBaseDto
 
         switch (type)
         {
-            case ItemTypeDto.Gold: item.Gold = Random.Shared.Next(250); break;
-            case ItemTypeDto.Armor: item.Armor = Random.Shared.Next(20); item.Pictocode = Random.Shared.Next(ArmorNumVariants) + 1; break;
-            case ItemTypeDto.Food: item.Food = Random.Shared.Next(75); item.Pictocode = Random.Shared.Next(FoodNumVariants) + 1; break;
-            case ItemTypeDto.Potion: item.Hp = Random.Shared.Next(75); item.Pictocode = Random.Shared.Next(PotionNumVariants) + 1; break;
+            case ItemTypeDto.Gold: item.Gold = Random.Shared.Next(10, 251); break;
+            case ItemTypeDto.Armor: item.Armor = Random.Shared.Next(1, 21); item.Pictocode = Random.Shared.Next(ArmorNumVariants) + 1; break;
+            case ItemTypeDto.Food: item.Food = Random.Shared.Next(10, 76); item.Pictocode = Random.Shared.Next(FoodNumVariants) + 1; break;
+            case ItemTypeDto.Potion: item.Hp = Random.Shared.Next(10, 76); item.Pictocode = Random.Shared.Next(PotionNumVariants) + 1; break;
             case ItemTypeDto.Weapon:
                 {
-                    item.Attack = Random.Shared.Next(30);
-                    item.AttackSpeed = Random.Shared.Next(20) / 10.0;
-                    item.Crit = Random.Shared.Next(10);
+                    item.Attack = Random.Shared.Next(1, 31);
+                    item.AttackSpeed = Random.Shared.Next(1, 21) / 10.0;
+                    item.Crit = Random.Shared.Next(1, 11);
                     item.Pictocode = Random.Shared.Next(WeaponNumVariants) + 1;
                     break;
                 }

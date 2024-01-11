@@ -36,4 +36,12 @@ public class UserService : BaseService<User, UserDto>, IUserService
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         return await base.AddAsync(user);
     }
+
+    public async Task UpdateFirebaseToken(UserDto user)
+    {
+        var u = await _entitiesSet.SingleAsync(u => u.Username == user.Username);
+        u.FirebaseToken = user.FirebaseToken;
+        _context.Update(u);
+        await _context.SaveChangesAsync();
+    }
 }

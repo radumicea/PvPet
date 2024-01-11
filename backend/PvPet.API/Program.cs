@@ -4,9 +4,10 @@ using PvPet.API.Configurations;
 using PvPet.Data.Contexts;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.Extensions.Hosting;
 using PvPet.API.BackgroundServices;
-// using PvPet.API.Middleware;
+using PvPet.API.Middleware;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 const string myPolicy = "MyPolicy";
 
@@ -68,11 +69,16 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// builder.Services.AddTransient<ExceptionHandlerMiddleware>();
+builder.Services.AddTransient<ExceptionHandlerMiddleware>();
+
+FirebaseApp.Create(new AppOptions
+{
+    Credential = GoogleCredential.FromFile("notifications_secrets.json")
+});
 
 var app = builder.Build();
 
-// app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

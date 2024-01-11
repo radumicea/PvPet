@@ -31,6 +31,7 @@ namespace PvPet.API.Controllers
         {
             var claims = await _userService.GetClaimsAsync(user);
             await HttpContext.SignInAsync(claims);
+            await _userService.UpdateFirebaseToken(user);
 
             return Ok();
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using PvPet.Business.DTOs;
+using PvPet.Business.Services;
 using PvPet.Business.Services.Contracts;
 
 namespace PvPet.API.BackgroundServices;
@@ -40,23 +41,24 @@ public class GameLoopBackgroundService : BackgroundService
         var shopItemService = scope.ServiceProvider.GetRequiredService<IShopItemService>();
         var petItemService = scope.ServiceProvider.GetRequiredService<IPetItemService>();
         var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
+        var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
 
-        await CommenceFights(petService, fightService);
-        var items = await UpdateItemsOnMap(itemOnMapService, petItemService, mapper);
+        await CommenceFights(petService, fightService, notificationService);
+        var items = await UpdateItemsOnMap(itemOnMapService, petItemService, mapper, notificationService);
         await shopItemService.Restock(SecondsInTick);
         await petService.MakePetsHungry();
     }
 
-    private static async Task CommenceFights(IPetService petService, IFightService fightService)
+    private static async Task CommenceFights(IPetService petService, IFightService fightService, NotificationService notificationService)
     {
         var pairs = await petService.GetClosestPairsInRange(FightRange, SecondsInTick);
         foreach ((var p1, var p2) in pairs)
         {
-            await Fight(p1, p2, petService, fightService);
+            await Fight(p1, p2, petService, fightService, notificationService);
         }
     }
 
-    private static async Task<List<ItemOnMapDto>> UpdateItemsOnMap(IItemOnMapService itemOnMapService, IPetItemService petItemService, IMapper mapper)
+    private static async Task<List<ItemOnMapDto>> UpdateItemsOnMap(IItemOnMapService itemOnMapService, IPetItemService petItemService, IMapper mapper, NotificationService notificationService)
     {
         var pairs = await itemOnMapService.GetItemsWithClosestPetInRange(PickupRange);
         var petItemsToAdd = new List<PetItemDto>();
@@ -66,6 +68,8 @@ public class GameLoopBackgroundService : BackgroundService
             var petItem = mapper.Map<PetItemDto>(item);
             petItem.PetId = pet.Id;
             petItemsToAdd.Add(petItem);
+
+            await notificationService.NotifyPetOwner(pet.Id, "Your pet just found a new item!");
 
             pet.Attack += item.Attack;
             pet.Crit += item.Crit;
@@ -90,7 +94,7 @@ public class GameLoopBackgroundService : BackgroundService
         return (await itemOnMapService.QueryAsync()).ToList();
     }
 
-    private static async Task Fight(PetDto p1, PetDto p2, IPetService petService, IFightService fightService)
+    private static async Task Fight(PetDto p1, PetDto p2, IPetService petService, IFightService fightService, NotificationService notificationService)
     {
         var fight = new FightDto
         {
@@ -152,7 +156,8 @@ public class GameLoopBackgroundService : BackgroundService
             p1.Gold += p2.Gold / 2;
             p2.Gold -= p2.Gold / 2;
 
-            // Notify
+            await notificationService.NotifyPetOwner(p1.Id, "Your pet just won a fight!");
+            await notificationService.NotifyPetOwner(p2.Id, "Your pet just lost a fight...");
             petFightOne.Winner = true;
         }
 
@@ -161,7 +166,8 @@ public class GameLoopBackgroundService : BackgroundService
             p2.Gold += p1.Gold / 2;
             p1.Gold -= p1.Gold / 2;
 
-            // Notify
+            await notificationService.NotifyPetOwner(p2.Id, "Your pet just won a fight!");
+            await notificationService.NotifyPetOwner(p1.Id, "Your pet just lost a fight...");
             petFightTwo.Winner = true;
         }
 

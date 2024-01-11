@@ -8,5 +8,6 @@ namespace PvPet.Business.Services.Contracts
     public interface IUserService : IBaseService<User, UserDto>
     {
         Task<ClaimsPrincipal> GetClaimsAsync(UserDto request);
+        Task UpdateFirebaseToken(UserDto user);
     }
 }
