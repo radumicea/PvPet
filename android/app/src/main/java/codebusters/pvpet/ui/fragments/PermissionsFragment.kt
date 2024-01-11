@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import codebusters.pvpet.R
 import codebusters.pvpet.constants.Constants
 import codebusters.pvpet.providers.LocationProvider
 import codebusters.pvpet.services.BackgroundService
@@ -80,6 +81,9 @@ class PermissionsFragment : Fragment() {
         val serviceIntent = Intent(requireContext(), BackgroundService::class.java)
         startForegroundService(requireContext(), serviceIntent)
 
-        findNavController().popBackStack()
+        val navController = findNavController()
+        if (!navController.popBackStack()) {
+            navController.navigate(R.id.home_fragment)
+        }
     }
 }
