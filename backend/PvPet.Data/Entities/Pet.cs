@@ -22,9 +22,20 @@ public class Pet : Entity
 
     public int Crit { get; set; }
 
+    public int CooldownSeconds { get; set; }
+
     public Point Location { get; set; } = default!;
+
+    public int SecondsToRestockShop { get; set; }
 
     public Guid UserId { get; set; }
 
+    public ICollection<PetItem> Items { get; set; } = null!;
+
+    public ICollection<ShopItem> ShopItems { get; set; } = null!;
+
     public User User { get; set; } = default!;
+
+    public ICollection<Fight> Fights { get; set; } = null!;
+    public ICollection<PetFight> PetsFights { get; set; } = null!;
 }

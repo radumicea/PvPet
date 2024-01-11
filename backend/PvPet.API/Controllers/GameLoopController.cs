@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PvPet.API.Extensions;
 using PvPet.Business.DTOs;
 using PvPet.Business.Services.Contracts;
 
@@ -8,25 +10,47 @@ namespace PvPet.API.Controllers;
 [ApiController]
 public class GameLoopController : ControllerBase
 {
+    private readonly IUserService _userService;
     private readonly IPetService _petService;
+    private readonly IItemOnMapService _itemOnMapService;
 
-    public GameLoopController(IPetService petService)
+    public GameLoopController(
+        IUserService userService,
+        IPetService petService,
+        IItemOnMapService itemOnMapService,
+        IShopItemService shopItemService)
     {
+        _userService = userService;
         _petService = petService;
+        _itemOnMapService = itemOnMapService;
     }
 
-    [HttpPatch("updatePetLocation")]
-    public async Task<IActionResult> UpdatePetLocation([FromBody] PetDto update)
+    [HttpPatch("updateGameState")]
+    public async Task<IActionResult> UpdateGameState([FromBody] PetDto update)
     {
-        if (!await _petService.UpdateAsync(update))
+        var user = await _userService.QuerySingleAsync(
+            include: u => u.Include(u => u.Pet!),
+            predicate: u => u.Username == HttpContext.GetUsername()
+            );
+
+        if (!await _petService.UpdateAsync(new PetDto { Id = user!.Pet!.Id, Location = update.Location }))
         {
             return BadRequest();
         }
 
-        var enemyLocations = (await _petService.QueryAsync(predicate: pet => pet.Id != update.Id))
+        var pet = await _petService.QueryAsync(
+            include: p => p.Include(p => p.PetsFights!).Include(u => u.ShopItems!).Include(p => p.Items!),
+            predicate: p => p.UserId == user.Id
+            );
+
+        var enemyLocations = (await _petService.QueryAsync(predicate: pet => pet.Id != user!.Pet!.Id))
             .Select(pet => pet.Location)
             .ToList();
 
-        return Ok(enemyLocations);
+        var itemLocations = (await _itemOnMapService.QueryAsync())
+            .Select(i => i.Location)
+            .ToList();
+
+        return Ok(new { pet, enemyLocations, itemLocations });
     }
 }

@@ -6,5 +6,6 @@ namespace PvPet.Business.Services.Contracts;
 
 public interface IPetService : IBaseService<Pet, PetDto>
 {
-    Task<IEnumerable<(PetDto, PetDto)>> GetClosestPairsInRange(double range);
+    Task<IEnumerable<(PetDto, PetDto)>> GetClosestPairsInRange(double range, int secondsInTick);
+    Task MakePetsHungry();
 }

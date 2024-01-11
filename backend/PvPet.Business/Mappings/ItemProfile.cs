@@ -19,5 +19,12 @@ public class ItemProfile : Profile
         CreateMap<ShopItem, ShopItemDto>()
             .ForAllMembers(i => i.ExplicitExpansion());
         CreateMap<ShopItemDto, ShopItem>();
+
+        CreateMap<PetItem, PetItemDto>()
+            .ForAllMembers(i => i.ExplicitExpansion());
+        CreateMap<PetItemDto, PetItem>();
+
+        CreateMap<ItemOnMapDto, PetItem>()
+            .ForAllMembers(i => i.ExplicitExpansion());
     }
 }

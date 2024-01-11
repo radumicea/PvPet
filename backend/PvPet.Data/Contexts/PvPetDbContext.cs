@@ -47,9 +47,32 @@ public class PvPetDbContext : DbContext
             .HasOne(u => u.Pet)
             .WithOne(pet => pet.User);
 
+        modelBuilder.Entity<Pet>()
+            .HasMany(p => p.ShopItems)
+            .WithOne(i => i.Pet);
+
+        modelBuilder.Entity<Pet>()
+            .HasMany(p => p.Items)
+            .WithOne(i => i.Pet);
+
+        modelBuilder.Entity<Pet>()
+            .HasMany(p => p.Fights)
+            .WithMany(f => f.Pets);
+
+        modelBuilder.Entity<Fight>()
+            .HasMany(f => f.Pets)
+            .WithMany(p => p.Fights);
+
+        modelBuilder.Entity<Fight>()
+            .HasMany(f => f.Rounds)
+            .WithOne(r  => r.Fight);
+    }
+
+    private void AddConstraints(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<User>()
-            .HasMany(u => u.ShopItems)
-            .WithOne(item => item.User);
+            .HasIndex(user => user.Username)
+            .IsUnique();
 
         modelBuilder.Entity<Pet>()
             .Property(e => e.Location)
@@ -60,10 +83,9 @@ public class PvPetDbContext : DbContext
             .HasColumnType("geography (point)");
     }
 
-    private void AddConstraints(ModelBuilder modelBuilder)
+    private void AddIndexes(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>()
-            .HasIndex(user => user.Username)
-            .IsUnique();
+        modelBuilder.Entity<Pet>()
+            .HasIndex(p => p.Location);
     }
 }

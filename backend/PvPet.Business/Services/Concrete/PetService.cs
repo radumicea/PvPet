@@ -13,11 +13,23 @@ public class PetService : BaseService<Pet, PetDto>, IPetService
     {
     }
 
-    public async Task<IEnumerable<(PetDto, PetDto)>> GetClosestPairsInRange(double range)
+    public override async Task<bool> DeleteAsync(PetDto pet)
+    {
+        // TODO Send death notification
+        return await base.DeleteAsync(pet);
+    }
+
+    public override async Task<bool> DeleteRangeAsync(IEnumerable<PetDto> pets)
+    {
+        // TODO Send death notification
+        return await base.DeleteRangeAsync(pets);
+    }
+
+    public async Task<IEnumerable<(PetDto, PetDto)>> GetClosestPairsInRange(double range, int secondsInTick)
     {
         var query =
-            from p1 in _entitiesSet
-            from p2 in _entitiesSet.Where(p2 => p2.Id > p1.Id && p2.Location.Distance(p1.Location) <= range)
+            from p1 in _entitiesSet.Where(p => p.CooldownSeconds == 0)
+            from p2 in _entitiesSet.Where(p2 => p2.CooldownSeconds == 0 && p2.Id > p1.Id && p2.Location.Distance(p1.Location) <= range)
             orderby p1.Location.Distance(p2.Location)
             select new { p1, p2 };
 
@@ -37,6 +49,29 @@ public class PetService : BaseService<Pet, PetDto>, IPetService
             taken.Add(pair.p2.Id);
         }
 
+        await _entitiesSet.ExecuteUpdateAsync(p => p.SetProperty(p => p.CooldownSeconds, p => Math.Max(0, p.CooldownSeconds - secondsInTick)));
+
         return result;
+    }
+
+    public async Task MakePetsHungry()
+    {
+        var pets = await _entitiesSet.ToListAsync();
+
+        foreach (var p in pets)
+        {
+            var oneInOneHundred = Random.Shared.Next(100) == 0;
+
+            // It will take on average 5 (tickInSeconds) * 100 (petHp) / (1 / 100) (chance to decrement) == 13.89 hours for pet to starve to death
+            if (oneInOneHundred)
+            {
+                p.Food--;
+                _context.Update(p);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        await DeleteRangeAsync(await QueryAsync(predicate: p => p.Food <= 0));
     }
 }

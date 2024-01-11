@@ -15,17 +15,20 @@ public class ShopItemService : BaseService<ShopItem, ShopItemDto>, IShopItemServ
     {
     }
 
-    public async Task Restock()
-    {
-        var usersToBeRestocked = await _context.Set<User>().Where(u => u.SecondsToRestockShop <= 0).ToListAsync();
-        var usersIds = usersToBeRestocked.Select(u => u.Id).ToHashSet();
-        await _entitiesSet.Where(i => usersIds.Contains(i.UserId)).ExecuteDeleteAsync();
 
-        foreach (var u in usersToBeRestocked)
+    public async Task Restock(int tickInSeconds)
+    {
+        await _context.Set<Pet>().ExecuteUpdateAsync(p => p.SetProperty(p => p.SecondsToRestockShop, p => p.SecondsToRestockShop - tickInSeconds));
+
+        var petsToBeRestocked = await _context.Set<Pet>().Where(u => u.SecondsToRestockShop <= 0).ToListAsync();
+        var petsIds = petsToBeRestocked.Select(p => p.Id).ToHashSet();
+        await _entitiesSet.Where(i => petsIds.Contains(i.PetId)).ExecuteDeleteAsync();
+
+        foreach (var p in petsToBeRestocked)
         {
-            await AddRangeAsync(Enumerable.Range(0, NumItems).Select(_ => { var i = ShopItemDto.New(); i.UserId = u.Id; return i; }));
-            u.SecondsToRestockShop = 60 * 60;
-            _context.Update(u);
+            await AddRangeAsync(Enumerable.Range(0, NumItems).Select(_ => { var i = ShopItemDto.New(); i.PetId = p.Id; return i; }));
+            p.SecondsToRestockShop = 60 * 60;
+            _context.Update(p);
         }
 
         await _context.SaveChangesAsync();

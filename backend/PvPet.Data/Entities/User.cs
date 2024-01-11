@@ -7,8 +7,4 @@ public class User : Entity
     public string PasswordHash { get; set; } = default!;
 
     public Pet Pet { get; set; } = default!;
-
-    public ICollection<ShopItem> ShopItems { get; set; } = null!;
-
-    public int SecondsToRestockShop { get; set; }
 }

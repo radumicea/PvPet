@@ -1,14 +1,12 @@
-﻿using PvPet.Data.Entities;
-
-namespace PvPet.Business.DTOs;
+﻿namespace PvPet.Business.DTOs;
 
 public class ShopItemDto : ItemBaseDto
 {
     public int? Price { get; set; }
 
-    public Guid? UserId { get; set; }
+    public Guid? PetId { get; set; }
 
-    public User? User { get; set; }
+    public PetDto? Pet { get; set; }
 
     public static ShopItemDto New()
     {

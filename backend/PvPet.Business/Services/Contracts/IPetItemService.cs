@@ -4,7 +4,6 @@ using PvPet.Data.Entities;
 
 namespace PvPet.Business.Services.Contracts;
 
-public interface IShopItemService : IBaseService<ShopItem, ShopItemDto>
+public interface IPetItemService : IBaseService<PetItem, PetItemDto>
 {
-    Task Restock(int secondsInTick);
 }

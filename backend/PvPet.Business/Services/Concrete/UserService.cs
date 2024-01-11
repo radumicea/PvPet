@@ -26,7 +26,7 @@ public class UserService : BaseService<User, UserDto>, IUserService
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             throw new ResponseStatusException(HttpStatusCode.Unauthorized);
 
-        var nameClaim = new Claim(ClaimTypes.Name, user.Username);
+        var nameClaim = new Claim(ClaimTypes.Name, user.Username!);
 
         return new ClaimsPrincipal(new ClaimsIdentity(new[] { nameClaim }, CookieAuthenticationDefaults.AuthenticationScheme));
     }
@@ -35,10 +35,5 @@ public class UserService : BaseService<User, UserDto>, IUserService
     {
         user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
         return await base.AddAsync(user);
-    }
-
-    public async Task UpdateRestockTime(int elapsedSeconds)
-    {
-        await _entitiesSet.ExecuteUpdateAsync(u => u.SetProperty(i => i.SecondsToRestockShop, i => i.SecondsToRestockShop - elapsedSeconds));
     }
 }

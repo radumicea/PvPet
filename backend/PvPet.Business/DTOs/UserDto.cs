@@ -1,6 +1,4 @@
-﻿using PvPet.Data.Entities;
-
-namespace PvPet.Business.DTOs;
+﻿namespace PvPet.Business.DTOs;
 
 public class UserDto
 {
@@ -10,9 +8,5 @@ public class UserDto
 
     public string? Password { get; set; }
 
-    public Pet? Pet { get; set; }
-
-    public ICollection<ShopItem>? ShopItems { get; set; }
-
-    public int? SecondsToRestockShop { get; set; }
+    public PetDto? Pet { get; set; }
 }

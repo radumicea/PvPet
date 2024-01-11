@@ -28,13 +28,21 @@ public class PetDto
 
     public int? Crit { get; set; }
 
+    public int? CooldownSeconds { get; set; }
+
     public LocationDto? Location { get; set; }
+
+    public int? SecondsToRestockShop { get; set; }
 
     public Guid? UserId { get; set; }
 
+    public ICollection<PetItemDto>? Items { get; set; } = null!;
+
+    public ICollection<ShopItemDto>? ShopItems { get; set; }
+
     public UserDto? User { get; set; }
 
-    public ICollection<ItemOnMapDto>? Items { get; set; }
+    public ICollection<PetFightDto>? PetsFights { get; set; }
 
     public static PetDto New(string name, Guid userId)
     {
