@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -43,7 +44,7 @@
 
 
         <service
-            android:name=".services.LocationService"
+            android:name=".services.BackgroundService"
             android:exported="false"
             android:foregroundServiceType="location" />
 

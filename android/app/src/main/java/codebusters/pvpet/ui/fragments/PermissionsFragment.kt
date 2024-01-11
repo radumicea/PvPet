@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import codebusters.pvpet.constants.Constants
 import codebusters.pvpet.providers.LocationProvider
-import codebusters.pvpet.services.LocationService
+import codebusters.pvpet.services.BackgroundService
 
 class PermissionsFragment : Fragment() {
     companion object {
@@ -77,7 +77,7 @@ class PermissionsFragment : Fragment() {
         LocationProvider.init(requireContext())
 
         // start location service
-        val serviceIntent = Intent(requireContext(), LocationService::class.java)
+        val serviceIntent = Intent(requireContext(), BackgroundService::class.java)
         startForegroundService(requireContext(), serviceIntent)
 
         findNavController().popBackStack()

@@ -1,7 +1,11 @@
 package codebusters.pvpet.providers
 
+import codebusters.pvpet.persistance.PersistentCookieJar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -16,6 +20,15 @@ object HttpClient {
         .connectTimeout(2, TimeUnit.SECONDS)
         .readTimeout(2, TimeUnit.SECONDS)
         .writeTimeout(2, TimeUnit.SECONDS)
+        .cookieJar(object : CookieJar {
+            override fun loadForRequest(url: HttpUrl): List<Cookie> {
+                return PersistentCookieJar.loadForRequest()
+            }
+
+            override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                PersistentCookieJar.saveFromResponse(cookies)
+            }
+        })
         .build()
 
     fun <T> post(

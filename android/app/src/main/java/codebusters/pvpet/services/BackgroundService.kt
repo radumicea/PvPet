@@ -7,8 +7,11 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import codebusters.pvpet.constants.Constants
+import codebusters.pvpet.data.GameData
 import codebusters.pvpet.data_access.GameLoopDataAccessor
+import codebusters.pvpet.data_access.UserDataAccessor
 import codebusters.pvpet.models.Pet
+import codebusters.pvpet.models.User
 import codebusters.pvpet.providers.LocationProvider
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.CoroutineScope
@@ -16,8 +19,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
-class LocationService : Service() {
+class BackgroundService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -29,13 +34,18 @@ class LocationService : Service() {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
+        // Mock login
+        runBlocking {
+            withContext(Dispatchers.IO) {
+                UserDataAccessor.login(User(null, "Radu", "parola", null))
+            }
+        }
+
         LocationProvider.getLocationUpdates(Constants.TICK_IN_MS)
             .onEach { location ->
                 try {
-                    val enemyLocations = GameLoopDataAccessor.updatePetLocation(
+                    val gameState = GameLoopDataAccessor.updatePetState(
                         Pet(
-                            // TO DO
-                            id = "3B5625EB-CC25-4F97-A3FB-8BBFB76BCD14",
                             location = LatLng(
                                 location.latitude,
                                 location.longitude
@@ -43,7 +53,7 @@ class LocationService : Service() {
                         )
                     )
 
-                    LocationProvider.enemyLocations.postValue(enemyLocations)
+                    GameData.updateGameState(gameState)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
