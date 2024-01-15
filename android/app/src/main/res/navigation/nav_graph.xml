@@ -28,4 +28,14 @@
         android:id="@+id/notifications_fragment"
         android:name="codebusters.pvpet.ui.fragments.NotificationsFragment"
         android:label="NotificationsFragment" />
+
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="codebusters.pvpet.ui.fragments.LoginFragment"
+        android:label="LoginFragment" />
+
+    <fragment
+        android:id="@+id/register_fragment"
+        android:name="codebusters.pvpet.ui.fragments.RegisterFragment"
+        android:label="RegisterFragment" />
 </navigation>

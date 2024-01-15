@@ -27,6 +27,10 @@ public class GameLoopController : ControllerBase
     [HttpPatch("updateGameState")]
     public async Task<IActionResult> UpdateGameState([FromBody] PetDto update)
     {
+        if (HttpContext.User?.Identity?.IsAuthenticated == false)
+        {
+            return Unauthorized();
+        }
         var user = await _userService.QuerySingleAsync(
             include: u => u.Include(u => u.Pet!),
             predicate: u => u.Username == HttpContext.GetUsername()

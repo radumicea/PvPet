@@ -27,4 +27,11 @@
         android:icon="@drawable/notifications"
         android:title="Notifications"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_item_login"
+        android:enabled="true"
+        android:icon="@drawable/login"
+        android:title="Login"
+        app:showAsAction="always" />
 </menu>

@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding.navigation.setOnItemReselectedListener {
             // ignore the reselection
         }
+
+
         activityMainBinding.navigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_item_home -> {
@@ -46,6 +48,11 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.menu_item_notifications -> {
                     navController.navigate(R.id.notifications_fragment)
+                    true
+                }
+
+                R.id.menu_item_login -> {
+                    navController.navigate(R.id.login_fragment)
                     true
                 }
 

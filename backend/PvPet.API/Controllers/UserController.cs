@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using PvPet.API.Extensions;
 using PvPet.Business.DTOs;
 using PvPet.Business.Services.Contracts;
 
@@ -10,10 +11,12 @@ namespace PvPet.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IPetService _petService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IPetService petService)
         {
             _userService = userService;
+            _petService = petService;
         }
 
         [HttpPost]
@@ -21,6 +24,8 @@ namespace PvPet.API.Controllers
         {
             var id = await _userService.AddAsync(user);
 
+            var pet = PetDto.New("pet1", id);
+            await _petService.AddAsync(pet);
             return id != Guid.Empty
             ? Ok()
             : BadRequest();

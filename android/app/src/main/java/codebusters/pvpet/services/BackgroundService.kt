@@ -34,12 +34,7 @@ class BackgroundService : Service() {
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .build()
 
-        // Mock login
-        runBlocking {
-            withContext(Dispatchers.IO) {
-                UserDataAccessor.login(User(null, "Radu", "parola", null))
-            }
-        }
+
 
         LocationProvider.getLocationUpdates(Constants.TICK_IN_MS)
             .onEach { location ->
