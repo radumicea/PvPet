@@ -6,6 +6,7 @@ import codebusters.pvpet.providers.HttpClient
 import com.google.gson.reflect.TypeToken
 import okhttp3.internal.notify
 
+data class buyITem(val id : String?)
 object UserDataAccessor {
     fun login(user: User, onSuccess: (Any) -> Unit, onError: (Exception) -> Unit) {
         HttpClient.post("${BuildConfig.API_URI}/User/login", user, object : TypeToken<Any>() {
@@ -30,5 +31,13 @@ object UserDataAccessor {
                 onError.invoke(error)
             }
         })?.notify()
+    }
+
+    fun buyItem(itemId: String?) {
+        if (itemId != null) {
+            HttpClient.post("${BuildConfig.API_URI}/Pet/Buy", itemId, object : TypeToken<Any>() {
+
+            })
+        }
     }
 }

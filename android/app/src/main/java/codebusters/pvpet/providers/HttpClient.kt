@@ -16,10 +16,10 @@ object HttpClient {
     private val JsonMediaType = "application/json".toMediaType()
 
     private val client: OkHttpClient = OkHttpClient.Builder()
-        .callTimeout(2, TimeUnit.SECONDS)
-        .connectTimeout(2, TimeUnit.SECONDS)
-        .readTimeout(2, TimeUnit.SECONDS)
-        .writeTimeout(2, TimeUnit.SECONDS)
+        .callTimeout(5, TimeUnit.SECONDS)
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .readTimeout(5, TimeUnit.SECONDS)
+        .writeTimeout(5, TimeUnit.SECONDS)
         .cookieJar(object : CookieJar {
             override fun loadForRequest(url: HttpUrl): List<Cookie> {
                 return PersistentCookieJar.loadForRequest()
@@ -38,6 +38,8 @@ object HttpClient {
     ): T {
         return doRequest(url, HttpMethod.POST, payload, typeToken)
     }
+
+
 
     fun <T> patch(
         url: String,

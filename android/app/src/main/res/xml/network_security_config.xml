@@ -2,7 +2,7 @@
 <network-security-config>
     <debug-overrides>
         <trust-anchors>
-            <domain includeSubdomains="true">192.168.1.131</domain>
+            <domain includeSubdomains="true">192.168.1.161</domain>
             <certificates src="@raw/local_ca" />
         </trust-anchors>
     </debug-overrides>

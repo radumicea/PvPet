@@ -33,4 +33,21 @@ public class ShopItemService : BaseService<ShopItem, ShopItemDto>, IShopItemServ
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<ShopItem>> GetShopItems(Guid petId)
+    {
+        return await _context.Set<ShopItem>().Where(item => item.PetId == petId).ToListAsync();
+    }
+
+    public async Task<ShopItem?> GetShopItemById(Guid id)
+    {
+        return await _context.Set<ShopItem>().FirstOrDefaultAsync(item => item.Id == id);
+
+    }
+
+    public async Task RemoveItem(ShopItem item)
+    { 
+        _context.Set<ShopItem>().Remove(item);
+        await _context.SaveChangesAsync();
+    }
 }

@@ -8,7 +8,7 @@ data class Pet(
     val variant: Int? = null,
     val hp: Int? = null,
     val food: Int? = null,
-    val gold: Int? = null,
+    var gold: Int? = null,
     val attack: Int? = null,
     val armor: Int? = null,
     val attackSpeed: Double? = null,
@@ -18,7 +18,7 @@ data class Pet(
     val secondsToRestockShop: Int? = null,
     val userId: String? = null,
     val items: List<PetItem>? = null,
-    val shopItems: List<ShopItem>? = null,
+    var shopItems: List<ShopItem>? = null,
     val user: List<User>? = null,
     val fights: List<PetFight>? = null,
 )

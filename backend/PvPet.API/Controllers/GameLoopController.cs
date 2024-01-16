@@ -13,15 +13,17 @@ public class GameLoopController : ControllerBase
     private readonly IUserService _userService;
     private readonly IPetService _petService;
     private readonly IItemOnMapService _itemOnMapService;
+    private readonly IShopItemService _shopItemService;
 
     public GameLoopController(
         IUserService userService,
         IPetService petService,
-        IItemOnMapService itemOnMapService)
+        IItemOnMapService itemOnMapService, IShopItemService shopItemService)
     {
         _userService = userService;
         _petService = petService;
         _itemOnMapService = itemOnMapService;
+        _shopItemService = shopItemService;
     }
 
     [HttpPatch("updateGameState")]
@@ -52,6 +54,9 @@ public class GameLoopController : ControllerBase
 
         var itemLocations = (await _itemOnMapService.QueryAsync())
             .Select(i => i.Location)
+            .ToList();
+
+        var shopItems = (await _shopItemService.GetShopItems(pet.Id))
             .ToList();
 
         return Ok(new { pet, enemyLocations, itemLocations });

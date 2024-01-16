@@ -7,4 +7,9 @@ namespace PvPet.Business.Services.Contracts;
 public interface IShopItemService : IBaseService<ShopItem, ShopItemDto>
 {
     Task Restock(int secondsInTick);
+
+    Task<IEnumerable<ShopItem>> GetShopItems(Guid petId);
+
+    Task<ShopItem?> GetShopItemById(Guid id);
+    Task RemoveItem(ShopItem item);
 }

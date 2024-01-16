@@ -1,4 +1,10 @@
-﻿namespace PvPet.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
+
+namespace PvPet.Data.Entities;
 
 public abstract class ItemBase : Entity
 {
@@ -17,11 +23,19 @@ public abstract class ItemBase : Entity
     public int Hp { get; set; }
 
     public int Food { get; set; }
-
     public int Gold { get; set; }
 }
 
+[JsonConverter(typeof(StringEnumConverter))]
 public enum ItemType
 {
-    Gold, Armor, Food, Potion, Weapon
+    gold,
+
+    armor,
+
+    food,
+
+    potion,
+
+    weapon
 }

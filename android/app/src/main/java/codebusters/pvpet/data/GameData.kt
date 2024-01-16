@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import codebusters.pvpet.models.GameState
 import codebusters.pvpet.models.Pet
+import codebusters.pvpet.models.ShopItem
 import com.google.android.gms.maps.model.LatLng
 
 object GameData {
@@ -15,6 +16,8 @@ object GameData {
 
     private val _petState = MutableLiveData<Pet>()
     val petState: LiveData<Pet> = _petState
+
+
 
     fun updateGameState(gameState: GameState) {
         _enemyLocations.postValue(gameState.enemyLocations)
